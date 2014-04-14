@@ -2,8 +2,38 @@
 	margin: 5px;
 }
 
+/* colors taken from bootstrap alerts */
+.good {
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+	/*color: #3c763d;*/
+}
+
+.okay {
+	background-color: #fcf8e3; 
+	border-color: #faebcc;
+	/*color: #8a6d3b;*/
+}
+
+.bad {
+	background-color: #f2dede; 
+	border-color: #ebccd1; 
+	/*color: #a94442;*/
+}
+
+.item .info {
+	float: left;
+	margin-left: 10px;
+}
+
+.item h4 {
+	display: inline;
+	margin-right: 10px;
+}
+
 .icon {
 	float: left;
+	border-radius: 5px;
 }
 
 .item_buttons {
@@ -12,4 +42,8 @@
 
 .clear {
     clear: both;
+}
+
+.btn {
+	margin: 1px;
 }

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Add Item</title>
+        <title>Inventory</title>
 
         <!-- Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -21,22 +21,23 @@
     <body>
         <span id="navbar" onload="$(this).addClass('active')"></span>
         <h1>Inventory</h1>
-        <div class="item panel panel-default">
-        <div class="panel-body">
-            <img src="images/apple.jpg" class="icon" height="50" width="50"/>
-            <div class="info">
-                Apple x2 
-                <span class="item_buttons">
-                    <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-plus-sign"></span></button> 
-                    <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-minus-sign"></span></button>
-                    <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-trash"></span></button>
-                    <br>
-                </span>
-                stuff
-            </div>
-            <div class="clear"></div>
-        </div>
-        </div>
+        <div id="container">
+            <!--<div class="item panel panel-default">
+                <div class="panel-body">
+                    <img src="images/apple.jpg" class="icon" height="50" width="50"/>
+                    <div class="info" style="float: left;">
+                        <h4><span class="item_name">Apple</span></h4> x<span class="quantity">2</span> <br>
+                        Expires: <input type="date" class="exp_date" value="04/20/2014">
+                        </div>
+                        <span class="item_buttons">
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span></button> 
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                            <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></button>
+                        </span>
+                    <div class="clear"></div>
+                </div>
+            </div> --><!-- /.item -->
+        </div> <!--/#container -->
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -45,10 +46,35 @@
         <script>
             $("#navbar").load("./navbar.html");
             $("#nav_add").addClass("active"); // TODO: make this line work
+            item = function(id, quality, item_name, img_src, quantity, date) {
+                // hahaha
+                return ('' +
+                    '<div class="item item' + id + ' ' + quality + ' panel panel-default">' +
+                    '<div class="panel-body">' + 
+                        '<img src="' + img_src + '" class="icon" height="70" width="70"/>'+
+                        '<div class="info" style="float: left;">'+
+                            '<h4><span class="item_name">' + item_name + '</span></h4> x<span class="quantity">' + quantity + '</span> <br>'+
+                           'Expires: <input type="date" class="exp_date" value="' + date + '">'+
+                            '</div>'+
+                            '<span class="item_buttons">'+
+                                '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span></button>'+
+                                '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span></button>'+
+                                '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></button>'+
+                            '</span>'+
+                        '<div class="clear"></div>'+
+                    '</div>'+
+                '</div> ');
+            }
+            $('#container').append(item(1, 'bad', 'Apples', 'images/apple.jpg', 2, '04/20/2014'));
+            $('#container').append(item(1, 'bad', 'Milk', 'images/milk.jpg', 1, '04/20/2014'));
+            $('#container').append(item(1, 'okay', 'Bread', 'images/bread.jpg', 1, '04/20/2014'));
+            $('#container').append(item(1, 'okay', 'Bananas', 'images/banana.jpg', 3, '04/20/2014'));
+            $('#container').append(item(1, 'okay', 'Avocados', 'images/avocado.jpg', 2, '04/20/2014'));
+            $('#container').append(item(1, 'good', 'Cheese', 'images/cheese.jpg', 1, '04/20/2014'));
+            $('#container').append(item(1, 'good', 'Chicken thighs', 'images/chicken.jpg', 4, '04/20/2014'));
+            $('#container').append(item(1, 'good', 'Peaches', 'images/peach.jpg', 5, '04/20/2014'));
+            $('#container').append(item(1, 'good', 'Oranges', 'images/orange.jpg', 2, '04/20/2014'));
+            $('#container').append(item(1, 'good', 'Lettuce', 'images/lettuce.jpg', 1, '04/20/2014'));
         </script>
     </body>
-        <script>
-        $("#navbar").load("./navbar.html");
-        $("#nav_add").addClass("active"); // TODO: make this line work
-        </script>
 </html>
