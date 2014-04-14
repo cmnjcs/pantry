@@ -1,0 +1,15 @@
+.item {
+	margin: 5px;
+}
+
+.icon {
+	float: left;
+}
+
+.item_buttons {
+	float: right;
+}
+
+.clear {
+    clear: both;
+}
