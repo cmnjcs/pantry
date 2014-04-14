@@ -44,7 +44,7 @@
         <h1>Add</h1>
         <table>
             <tr>
-                <td colspan="2" style="text-align:center">
+                <td colspan="4" style="text-align:center">
                     <button type="button"><span class="glyphicon glyphicon-barcode"></span></button>
                     or
                     <button type="button"><span class="glyphicon glyphicon-camera"></span></button>
@@ -55,6 +55,7 @@
                     Name:
                 </td>
                 <td>
+                <td>
                     <input type="text" id="itemName" oninput="populateDefaultData()">
                 </td>
             </tr>
@@ -64,7 +65,11 @@
                 </td>
                 <td>
                     <button type="button" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus"></span></button>
+                </td>
+                <td>
                     <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
+                </td>
+                <td>
                     <button type="button" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus"></span></button>
                 </td>
             </tr>
@@ -72,14 +77,18 @@
                 <td>
                     Cost:
                 </td>
+                <td style="text-align:right">
+                    $
+                </td>
                 <td>
-                    $<input type="number" id="txtCost" />
+                    <input type="number" id="txtCost" />
                 </td>
             </tr>
             <tr>
                 <td>
                     Expiration Date:
                 </td>
+                <td></td>
                 <td>
                     <input type="date" id="exp_date" />
                 </td>

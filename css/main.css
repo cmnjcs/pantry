@@ -102,3 +102,7 @@ background-color: tan;
 .page table {
     text-align: left;
 }
+
+.page td input {
+    width: 100%;
+}
