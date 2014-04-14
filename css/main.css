@@ -1,3 +1,8 @@
+body {
+    width: 480px;
+    height: 500px;
+}
+
 .item {
 	margin: 5px;
 }
@@ -46,4 +51,32 @@
 
 .btn {
 	margin: 1px;
+}
+
+.summary {
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid black;
+    margin: 10px;
+}
+
+.page {
+    text-align: center;
+    margin: 10px;
+}
+
+.summary * {
+    margin: auto;
+}
+
+.page * {
+    margin: auto;
+}
+
+.summary table {
+    text-align: left;
+}
+
+.page table {
+    text-align: left;
 }

@@ -9,6 +9,8 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
+    <link href="css/main.css" rel="stylesheet">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -17,46 +19,12 @@
     <![endif]-->
   </head>
   <body>
-<div class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="../inventory.html">Inventory</a></li>
-                <li><a href="../add.html">Add</a></li>
-                <li><a href="../trends.html">Trends  </a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Account</li>
-                <li><a href="../profile.html">Profile</a></li>
-                <li><a href="../settings.html">Settings</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="../add.html">Add</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
+      <span id="navbar" onload="$(this).addClass('active')"></span>
 
 
-    <div>
+    <div class="summary">
         <h1>Trends</h1>
-        This Month
+        <h4>This Month</h4>
         <table>
             <tr>
                 <td>Spent:</td>
@@ -72,7 +40,7 @@
             </tr>
         </table>
     </div>
-      <div>
+      <div class="summary">
         <h1>Inventory</h1>
         <table>
             <tr>
@@ -98,5 +66,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        $("#navbar").load("./navbar.html");
+        $("#nav_add").addClass("active"); // TODO: make this line work
+    </script>
   </body>
 </html>
