@@ -18,8 +18,9 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body class="page">
+    <body>
         <span id="navbar" onload="$(this).addClass('active')"></span>
+        <div class="page">
         <h1>Trends</h1>
         <ul class="nav nav-tabs">
           <li class="active"><a href="#spendingtab" data-toggle="tab" id="spending">Spending</a></li>
@@ -158,5 +159,6 @@
             var myNewChart = new Chart(ctx).Line(data,null);
         });
         </script>
+        </div>
     </body>
 </html>
