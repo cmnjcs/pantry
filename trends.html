@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Trends</title>
+
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <span id="navbar" onload="$(this).addClass('active')"></span>
+        <h1>Trends</h1>
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#">Spending</a></li>
+          <li><a href="#">Stock</a></li>
+          <li><a href="#">Waste</a></li>
+        </ul>
+        <table>
+            <tr>
+                <td>
+                    <button type="button"><span class="glyphicon glyphicon-barcode"></span></button>
+                    or
+                    <button type="button"><span class="glyphicon glyphicon-camera"></span></button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Name:
+                </td>
+                <td>
+                    <input type="text" id="itemName" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Quantity:
+                </td>
+                <td>
+                    <button type="button" id="btnDecrement"><span class="glyphicon glyphicon-minus"></span></button>
+                    <input type="number" id="quantity" value="1" />
+                    <button type="button" id="btnIncrement"><span class="glyphicon glyphicon-plus"></span></button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Cost:
+                </td>
+                <td>
+                    <input type="text" id="cost" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Expiration Date:
+                </td>
+                <td>
+                    <input type="date" id="exp_date" />
+                </td>
+            </tr>
+        </table>
+        
+        <button type="submit" id="btnSave">Save</button>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+        
+        <script>
+            $("#navbar").load("./navbar.html");
+            $("#nav_add").addClass("active"); // TODO: make this line work
+        </script>
+    </body>
+</html>
