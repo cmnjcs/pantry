@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#myTab a').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+            })
+        });
+    </script>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
