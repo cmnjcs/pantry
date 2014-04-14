@@ -1,13 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#myTab a').click(function (e) {
-                e.preventDefault()
-                $(this).tab('show')
-            })
-        });
-    </script>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,10 +21,23 @@
         <span id="navbar" onload="$(this).addClass('active')"></span>
         <h1>Trends</h1>
         <ul class="nav nav-tabs">
-          <li class="active"><a href="#">Spending</a></li>
-          <li><a href="#">Stock</a></li>
-          <li><a href="#">Waste</a></li>
+          <li class="active"><a href="#spendingtab" data-toggle="tab" id="spending">Spending</a></li>
+          <li><a href="#stocktab" data-toggle="tab" id="stock">Stock</a></li>
+          <li><a href="#wastetab" data-toggle="tab" id="waste">Waste</a></li>
         </ul>
+
+        <div class="tab-content">
+          <div class="tab-pane active" id="spendingtab">
+              sofjioweafjow
+          </div>
+          <div class="tab-pane" id="stocktab">
+              some different
+          </div>
+          <div class="tab-pane" id="wastetab">
+              maybe?
+          </div>
+        </div>
+        <!--
         <table>
             <tr>
                 <td>
@@ -76,7 +81,7 @@
                 </td>
             </tr>
         </table>
-        
+        -->
         <button type="submit" id="btnSave">Save</button>
 
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -87,6 +92,20 @@
         <script>
             $("#navbar").load("./navbar.html");
             $("#nav_add").addClass("active"); // TODO: make this line work
+            $(document).ready(function() {
+            $('#spending').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+            })
+            $('#stock').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+            })
+            $('#waste').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+            })
+        });
         </script>
     </body>
 </html>
