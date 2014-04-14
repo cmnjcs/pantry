@@ -2,10 +2,29 @@ body {
     width: 480px;
     height: 500px;
     font-family: 'Raleway', sans-serif;
+    background-image:url('../images/wood_pattern.png');
+	background-repeat:repeat-all;
+}
+
+.navbar {
+	background-color: tan;
+}
+.navbar-default .navbar-toggle:hover, 
+.navbar-default .navbar-toggle:focus {
+background-color: tan;
+}
+
+.navbar-default {
+	background-color: tan;
+}
+
+#container {
+	padding: 5px;
 }
 
 .item {
-	margin: 5px;
+	margin: 3px;
+	opacity: .9;
 }
 
 /* colors taken from bootstrap alerts */
@@ -59,6 +78,8 @@ body {
     border-radius: 5px;
     border: 1px solid black;
     margin: 10px;
+    opacity: .7;
+    background-color: tan;
 }
 
 .page {
