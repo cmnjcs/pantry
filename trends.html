@@ -26,24 +26,22 @@
           <li><a href="#stocktab" data-toggle="tab" id="stock">Stock</a></li>
           <li><a href="#wastetab" data-toggle="tab" id="waste">Waste</a></li>
         </ul>
-
+        <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" id="timeSelectDropdown" data-toggle="dropdown">
+                Dropdown
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="timeSelectDropdown">
+                <li role="presentation"><a id="weekSelect" role="menuitem" tabindex="-1" href="#">week</a></li>
+                <li role="presentation"><a id="monthSelect" role="menuitem" tabindex="-1" href="#">month</a></li>
+                <li role="presentation"><a id="threeMonthSelect" role="menuitem" tabindex="-1" href="#">three months</a></li>
+            </ul> <br>
+            <img id="graph" src="http://tailsmagazines.files.wordpress.com/2009/04/kitten.jpg" width="144"></img>
+        </div>
         <!--where data about the tabs will actually go-->
         <div class="tab-content">
           <div class="tab-pane active" id="spendingtab">
-          something should be here
-            <div class="dropdown">
-                  <button class="btn dropdown-toggle sr-only" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                    Dropdown
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-                    <li role="presentation" class="divider"></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-                  </ul>
-            </div>
+            
           </div>
           <div class="tab-pane" id="stocktab">
               some different
@@ -120,6 +118,18 @@
             $('#waste').click(function (e) {
                 e.preventDefault()
                 $(this).tab('show')
+            })
+            $('#weekSelect').click(function (e) {
+                e.preventDefault()
+                $(graph).attr('src', 'https://www.austintexas.gov/sites/default/files/files/Animal_Services/cute-kitten-playing.jpg')
+            })
+            $('#monthSelect').click(function (e) {
+                e.preventDefault()
+                $(graph).attr('src', 'http://critterbabies.com/wp-content/gallery/kittens/cats-animals-kittens-background-us.jpg')
+            })
+            $('#threeMonthSelect').click(function (e) {
+                e.preventDefault()
+                $(graph).attr('src', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Golden_tabby_and_white_kitten_n03.jpg')
             })
         });
         </script>
