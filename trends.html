@@ -18,7 +18,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body>
+    <body class="page">
         <span id="navbar" onload="$(this).addClass('active')"></span>
         <h1>Trends</h1>
         <ul class="nav nav-tabs">
@@ -31,13 +31,15 @@
                 Select timeframe
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="timeSelectDropdown">
+            <ul class="page dropdown-menu" role="menu" aria-labelledby="timeSelectDropdown">
                 <li role="presentation"><a id="weekSelect" role="menuitem" tabindex="-1" href="#">week</a></li>
                 <li role="presentation"><a id="monthSelect" role="menuitem" tabindex="-1" href="#">month</a></li>
                 <li role="presentation"><a id="threeMonthSelect" role="menuitem" tabindex="-1" href="#">three months</a></li>
             </ul> <br>
         </div>
-        <img id="graph" src="http://tailsmagazines.files.wordpress.com/2009/04/kitten.jpg" width="144"></img>
+        <!--location of the graph-->
+        <canvas id="chart" width="300" height="300">
+        </canvas>
         <!--where data about the tabs will actually go-->
         <div class="tab-content">
           <div class="tab-pane active" id="spendingtab">
@@ -100,8 +102,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
-        <link type="text/css" rel="stylesheet" href="./js/jquery.dropdown.css" />
-        <script type="text/javascript" src="./js/jquery.dropdown.js"></script>
+        <script src="./js/Chart.js-master/Chart.js"></script>
         
         <script>
             $("#navbar").load("./navbar.html");
@@ -131,6 +132,30 @@
                 e.preventDefault()
                 $(graph).attr('src', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Golden_tabby_and_white_kitten_n03.jpg')
             })
+            var data = {
+                labels : ["January","February","March","April","May","June","July"],
+                datasets : [
+                    {
+                        fillColor : "rgba(220,220,220,0.5)",
+                        strokeColor : "rgba(220,220,220,1)",
+                        pointColor : "rgba(220,220,220,1)",
+                        pointStrokeColor : "#fff",
+                        data : [65,59,90,81,56,55,40]
+                    },
+                    {
+                        fillColor : "rgba(151,187,205,0.5)",
+                        strokeColor : "rgba(151,187,205,1)",
+                        pointColor : "rgba(151,187,205,1)",
+                        pointStrokeColor : "#fff",
+                        data : [28,48,40,19,96,27,100]
+                    }
+                ]
+            }
+            //Get context with jQuery - using jQuery's .get() method.
+            var ctx = $("#chart").get(0).getContext("2d");
+            //This will get the first returned node in the jQuery collection.
+
+            var myNewChart = new Chart(ctx).Line(data,null);
         });
         </script>
     </body>
