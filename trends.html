@@ -27,12 +27,12 @@
           <li><a href="#stocktab" data-toggle="tab" id="stock">Stock</a></li>
           <li><a href="#wastetab" data-toggle="tab" id="waste">Waste</a></li>
         </ul>
-        <div class="dropdown">
+        <div class="dropdown pagination-centered">
             <button class="btn dropdown-toggle" type="button" id="timeSelectDropdown" data-toggle="dropdown">
-                Select timeframe
+                <span id="dropdown_title">Select timeframe</span>
                 <span class="caret"></span>
             </button>
-            <ul class="page dropdown-menu" role="menu" aria-labelledby="timeSelectDropdown">
+            <ul class="dropdown-menu pagination-centered" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
                 <li role="presentation"><a id="weekSelect" role="menuitem" tabindex="-1" href="#">week</a></li>
                 <li role="presentation"><a id="monthSelect" role="menuitem" tabindex="-1" href="#">month</a></li>
                 <li role="presentation"><a id="threeMonthSelect" role="menuitem" tabindex="-1" href="#">three months</a></li>
@@ -40,65 +40,20 @@
         </div>
         <!--location of the graph-->
         <canvas id="chart" width="300" height="300">
-        </canvas>
+        </canvas>        
         <!--where data about the tabs will actually go-->
         <div class="tab-content">
           <div class="tab-pane active" id="spendingtab">
-            
+            <div id="spendingLabel">Spent</div>
           </div>
           <div class="tab-pane" id="stocktab">
-              some different
+            <div id="stockLabel">Had</div>
           </div>
           <div class="tab-pane" id="wastetab">
-              maybe?
+            <div id="wasteLabel">Lost</div>
           </div>
         </div>
 
-        <!--
-        <table>
-            <tr>
-                <td>
-                    <button type="button"><span class="glyphicon glyphicon-barcode"></span></button>
-                    or
-                    <button type="button"><span class="glyphicon glyphicon-camera"></span></button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Name:
-                </td>
-                <td>
-                    <input type="text" id="itemName" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Quantity:
-                </td>
-                <td>
-                    <button type="button" id="btnDecrement"><span class="glyphicon glyphicon-minus"></span></button>
-                    <input type="number" id="quantity" value="1" />
-                    <button type="button" id="btnIncrement"><span class="glyphicon glyphicon-plus"></span></button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Cost:
-                </td>
-                <td>
-                    <input type="text" id="cost" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Expiration Date:
-                </td>
-                <td>
-                    <input type="date" id="exp_date" />
-                </td>
-            </tr>
-        </table>
-        -->
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -106,6 +61,10 @@
         <script src="./js/Chart.js-master/Chart.js"></script>
         
         <script>
+            // goes here so that all the on-click methods can get the canvas references
+            var interestContext = $("#chart").get(0).getContext("2d");
+            var ChartObject = new Chart(interestContext);
+
             $("#navbar").load("./navbar.html");
             $("#nav_add").addClass("active"); // TODO: make this line work
             $(document).ready(function() {
@@ -123,40 +82,77 @@
             })
             $('#weekSelect').click(function (e) {
                 e.preventDefault()
-                $(graph).attr('src', 'https://www.austintexas.gov/sites/default/files/files/Animal_Services/cute-kitten-playing.jpg')
+                // generate graph data here
+                var data = {
+                    labels : ["6 days","","","","2 days","","today"],
+                    datasets : [
+                        {
+                            fillColor : "rgba(151,187,205,0.5)",
+                            strokeColor : "rgba(151,187,205,1)",
+                            pointColor : "rgba(151,187,205,1)",
+                            pointStrokeColor : "#fff",
+                            data : [28,48,40,19,96,27,100]
+                        }
+                    ]
+                }
+                
+                $("#chart").attr('width', '300px');
+                $("#chart").attr('height', '300px');
+
+                ChartObject.Line(data);
+
+                $("#spendingLabel").html("Spent $43")
+                $("#stockLabel").html("Had 17 items")
+                $("#wasteLabel").html("Lost $43")
+                
             })
             $('#monthSelect').click(function (e) {
                 e.preventDefault()
-                $(graph).attr('src', 'http://critterbabies.com/wp-content/gallery/kittens/cats-animals-kittens-background-us.jpg')
+                // generate graph data here
+                var data = {
+                    labels : ["1 month","3 weeks","2 weeks","1 week","today"],
+                    datasets : [
+                        {
+                            fillColor : "rgba(151,187,205,0.5)",
+                            strokeColor : "rgba(151,187,205,1)",
+                            pointColor : "rgba(151,187,205,1)",
+                            pointStrokeColor : "#fff",
+                            data : [80,50,23,11,43]
+                        }
+                    ]
+                }
+                ChartObject.Line(data);
+
+                $("#spendingLabel").html("Spent $163")
+                $("#stockLabel").html("Had 33 items")
+                $("#wasteLabel").html("Lost $45")
+
             })
             $('#threeMonthSelect').click(function (e) {
                 e.preventDefault()
-                $(graph).attr('src', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Golden_tabby_and_white_kitten_n03.jpg')
-            })
-            var data = {
-                labels : ["January","February","March","April","May","June","July"],
-                datasets : [
-                    {
-                        fillColor : "rgba(220,220,220,0.5)",
-                        strokeColor : "rgba(220,220,220,1)",
-                        pointColor : "rgba(220,220,220,1)",
-                        pointStrokeColor : "#fff",
-                        data : [65,59,90,81,56,55,40]
-                    },
-                    {
-                        fillColor : "rgba(151,187,205,0.5)",
-                        strokeColor : "rgba(151,187,205,1)",
-                        pointColor : "rgba(151,187,205,1)",
-                        pointStrokeColor : "#fff",
-                        data : [28,48,40,19,96,27,100]
-                    }
-                ]
-            }
-            //Get context with jQuery - using jQuery's .get() method.
-            var ctx = $("#chart").get(0).getContext("2d");
-            //This will get the first returned node in the jQuery collection.
+                // generate graph data here
+                var data = {
+                    labels : ["3 months","2 months","1 month","today"],
+                    datasets : [
+                        {
+                            fillColor : "rgba(151,187,205,0.5)",
+                            strokeColor : "rgba(151,187,205,1)",
+                            pointColor : "rgba(151,187,205,1)",
+                            pointStrokeColor : "#fff",
+                            data : [80,70,95,44,12]
+                        }
+                    ]
+                }
+                ChartObject.Line(data);
 
-            var myNewChart = new Chart(ctx).Line(data,null);
+                $("#spendingLabel").html("Spent $344")
+                $("#stockLabel").html("Had 65 items")
+                $("#wasteLabel").html("Lost $99")
+
+            })
+            $('#timeOptions li').on('click', function() {
+                $('#dropdown_title').html("Last ".concat($(this).find('a').html()));
+            });
         });
         </script>
         </div>

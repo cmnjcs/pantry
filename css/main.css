@@ -106,3 +106,7 @@ background-color: tan;
 .page td input {
     width: 100%;
 }
+
+.dropdown-menu {
+	vertical-align: middle;
+}
