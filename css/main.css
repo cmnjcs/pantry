@@ -6,7 +6,12 @@ body {
 	background-repeat:repeat-all;
 }
 
-.navbar-default {
+a:visited {
+	text-decoration:none;
+}
+
+a:hover {
+	text-decoration:none;
 }
 
 #container {
