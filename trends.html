@@ -27,17 +27,28 @@
           <li><a href="#stocktab" data-toggle="tab" id="stock">Stock</a></li>
           <li><a href="#wastetab" data-toggle="tab" id="waste">Waste</a></li>
         </ul>
-        <div class="dropdown pagination-centered">
+
+        <div class="dropdown text-center pagination-centered">
             <button class="btn dropdown-toggle" type="button" id="timeSelectDropdown" data-toggle="dropdown">
                 <span id="dropdown_title">Select timeframe</span>
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu pagination-centered" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
                 <li role="presentation"><a id="weekSelect" role="menuitem" tabindex="-1" href="#">week</a></li>
                 <li role="presentation"><a id="monthSelect" role="menuitem" tabindex="-1" href="#">month</a></li>
                 <li role="presentation"><a id="threeMonthSelect" role="menuitem" tabindex="-1" href="#">three months</a></li>
-            </ul> <br>
+            </ul> 
+
         </div>
+        
+        <!-- framework for html dropdown menu
+        <select id="timeSelect" onchange="updateGraph()">
+          <option selected>Select timeframe</option>
+          <option>week</option>
+          <option>month</option>  
+          <option>3 months</option>
+        </select>
+        -->
         <!--location of the graph-->
         <canvas id="chart" width="300" height="300">
         </canvas>        
@@ -148,7 +159,6 @@
                 $("#spendingLabel").html("Spent $344")
                 $("#stockLabel").html("Had 65 items")
                 $("#wasteLabel").html("Lost $99")
-
             })
             $('#timeOptions li').on('click', function() {
                 $('#dropdown_title').html("Last ".concat($(this).find('a').html()));

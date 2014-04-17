@@ -108,5 +108,7 @@ background-color: tan;
 }
 
 .dropdown-menu {
-	vertical-align: middle;
+	position: relative;
+	width: 10em;
+	float: none;
 }
