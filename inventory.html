@@ -53,12 +53,12 @@
                     '<div class="panel-body">' + 
                         '<img src="' + img_src + '" class="icon" height="70" width="70"/>'+
                         '<div class="info" style="float: left;">'+
-                            '<h4><span class="item_name">' + item_name + '</span></h4> x<span class="quantity">' + quantity + '</span> <br>'+
+                            '<h4><span class="item_name">' + item_name + '</span></h4> x<span class="quantity" id="quantity' + id +'">' + quantity + '</span> <br>'+
                            'Expires: <input type="date" class="exp_date" value="' + date + '">'+
-                            '</div>'+
+                        '</div>'+
                             '<span class="item_buttons">'+
-                                '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span></button>'+
-                                '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span></button>'+
+                                '<button type="button" class="btn btn-default plus" id="plus' + id + '"><span class="glyphicon glyphicon-plus-sign"></span></button>'+
+                                '<button type="button" class="btn btn-default minus" id="minus' + id + '"><span class="glyphicon glyphicon-minus-sign"></span></button>'+
                                 '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></button>'+
                             '</span>'+
                         '<div class="clear"></div>'+
@@ -75,6 +75,41 @@
             $('#container').append(item(8, 'good', 'Peaches', 'images/peach.jpg', 5, '2014-04-20'));
             $('#container').append(item(9, 'good', 'Oranges', 'images/orange.jpg', 2, '2014-04-20'));
             $('#container').append(item(10, 'good', 'Lettuce', 'images/lettuce.jpg', 1, '2014-04-20'));
+            changeValue = function(id, amount) {
+               quantity = $('#quantity' + id);
+               num = parseInt(quantity.html()) + amount;
+               quantity.html(num);
+               // if value < 0 -> delete item
+            }
+
+            $('.plus').click(
+                function(event) {
+                    // check if clicking button or span? Pick the parent (button) if span was clicked.
+                    button = $(event.target)[0];
+                    // might have clicked on span...
+                    if ($(button).is('span')) {
+                        button = $(button).parent();
+                    } else {
+                        button = $(button);
+                    }
+                    button_id = button.attr('id');
+                    id = button_id.split("plus")[1];
+                    changeValue(id, 1);
+                });
+            $('.minus').click(
+                function(event) {
+                    // check if clicking button or span? Pick the parent (button) if span was clicked.
+                    button = $(event.target)[0];
+                    // might have clicked on span...
+                    if ($(button).is('span')) {
+                        button = $(button).parent();
+                    } else {
+                        button = $(button);
+                    }
+                    button_id = button.attr('id');
+                    id = button_id.split("minus")[1];
+                    changeValue(id, -1);
+                });
         </script>
     </body>
 </html>

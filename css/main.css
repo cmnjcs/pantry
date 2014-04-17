@@ -119,3 +119,7 @@ background-color: tan;
 #timeSelectDropdownMenu {
     margin-left: -10px;
 }
+
+td {
+    padding: 3px;
+}
