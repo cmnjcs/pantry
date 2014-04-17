@@ -123,9 +123,11 @@
 
                     ChartObject.Line(data);
 
-                    $("#spendingLabel").html("Spent $43")
-                    $("#stockLabel").html("Had 17 items")
-                    $("#wasteLabel").html("Lost $43")
+                    $("#spendingLabel").html("Spent $43");
+                    $("#stockLabel").html("Had 17 items");
+                    $("#wasteLabel").html("Lost $43");
+                    $("#dropdown_title").html("Past week");
+
 
                 })
                 $('#monthSelect').click(function (e) {
@@ -145,9 +147,10 @@
                     }
                     ChartObject.Line(data);
 
-                    $("#spendingLabel").html("Spent $163")
-                    $("#stockLabel").html("Had 33 items")
-                    $("#wasteLabel").html("Lost $45")
+                    $("#spendingLabel").html("Spent $163");
+                    $("#stockLabel").html("Had 33 items");
+                    $("#wasteLabel").html("Lost $45");
+                    $("#dropdown_title").html("Past month");
 
                 })
                 $('#threeMonthSelect').click(function (e) {
@@ -167,9 +170,10 @@
                     }
                     ChartObject.Line(data);
 
-                    $("#spendingLabel").html("Spent $344")
-                    $("#stockLabel").html("Had 65 items")
-                    $("#wasteLabel").html("Lost $99")
+                    $("#spendingLabel").html("Spent $344");
+                    $("#stockLabel").html("Had 65 items");
+                    $("#wasteLabel").html("Lost $99");
+                    $("#dropdown_title").html("Past 3 months");
                 })
                 $('#timeOptions li').on('click', function() {
                     $('#dropdown_title').html("Last ".concat($(this).find('a').html()));
@@ -196,6 +200,7 @@
                 $("#spendingLabel").html("Spent $43")
                 $("#stockLabel").html("Had 17 items")
                 $("#wasteLabel").html("Lost $43")
+                $("#dropdown_title").html("Past week");
             });
         </script>
         </div>
