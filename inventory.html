@@ -23,6 +23,26 @@
         <div id="container">
         <h1>Inventory</h1>
         <div id="items">
+            <!-- Modal -->
+<div class="modal fade" id="trashModal" tabindex="-1" role="dialog" aria-labelledby="trashModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="trashModalLabel">Trashing <span id="trashItem"></span></h4>
+      </div>
+      <div class="modal-body">
+            <button type="button" class="btn btn-default" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus"></span></button>
+            <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
+            <button type="button" class="btn btn-default" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus"></span></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashSelected">Trash Selected</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashAll">Trash All</button>
+      </div>
+    </div>
+  </div>
+</div>
             <!--<div class="item panel panel-default">
                 <div class="panel-body">
                     <img src="images/apple.jpg" class="icon" height="50" width="50"/>
@@ -63,7 +83,7 @@
                             '<span class="item_buttons">'+
                                 '<button type="button" class="btn btn-default plus" id="plus' + id + '"><span class="glyphicon glyphicon-plus-sign"></span></button>'+
                                 '<button type="button" class="btn btn-default minus" id="minus' + id + '"><span class="glyphicon glyphicon-minus-sign"></span></button>'+
-                                '<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></button>'+
+                                '<button type="button" class="btn btn-default trash" id="trash' + id  + '"><span class="glyphicon glyphicon-trash"></span></button>'+
                             '</span>'+
                         '<div class="clear"></div>'+
                     '</div>'+
@@ -79,16 +99,17 @@
             $('#items').append(item(8, 'good', 'Peaches', 'images/peach.jpg', 5, '2014-04-24'));
             $('#items').append(item(9, 'good', 'Oranges', 'images/orange.jpg', 2, '2014-04-25'));
             $('#items').append(item(10, 'good', 'Lettuce', 'images/lettuce.jpg', 1, '2014-04-26'));
-            changeValue = function(id, amount) {
-               quantity = $('#quantity' + id);
-               num = parseInt(quantity.html()) + amount;
-               quantity.html(num);
+
+            changeValue = function(id, amount, action) {
+               value = $('#quantity' + id);
+               num = parseInt(value.html()) + amount;
+               value.html(num);
                // if value < 0 -> delete item
                if (num <= 0) {
                     $('#' + id).remove();
                     $('#items').prepend('<div class="alert alert-warning fade in">' +
                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' +
-                        '<strong>' + items[id] + '</strong> deleted.' +
+                        '<strong>' + items[id] + '</strong> ' + action + '.' +
                         '</div>');
                }
             }
@@ -105,7 +126,7 @@
                     }
                     button_id = button.attr('id');
                     id = button_id.split("plus")[1];
-                    changeValue(id, 1);
+                    changeValue(id, 1, "deleted");
                 });
             $('.minus').click(
                 function(event) {
@@ -119,8 +140,51 @@
                     }
                     button_id = button.attr('id');
                     id = button_id.split("minus")[1];
-                    changeValue(id, -1);
+                    changeValue(id, -1, "deleted");
                 });
+            $('.trash').click(
+                function(event) {
+                    // check if clicking button or span? Pick the parent (button) if span was clicked.
+                    button = $(event.target)[0];
+                    // might have clicked on span...
+                    if ($(button).is('span')) {
+                        button = $(button).parent();
+                    } else {
+                        button = $(button);
+                    }
+                    button_id = button.attr('id');
+                    id = button_id.split("trash")[1];
+                    currId = id;
+                    maximum = parseInt($('#quantity' + id).html());
+                    $('#trashItem').html(items[id].toLowerCase());
+                    $('#trashModal').modal('show');
+                });
+            $('#trashSelected').click(
+                function(event) {
+                    changeValue(currId, -quantity, "trashed");
+                });
+            $('#trashAll').click(
+                function(event) {
+                    changeValue(currId, -maximum, "trashed");
+                });
+            var quantity = 1;
+            var maximum = 1; // changes with item to delete
+            var currId = 1;
+            function incrementQuantity() {
+                if (quantity < maximum) {
+                    quantity++;
+                }
+                $("#txtQuantity").val(quantity);
+            }
+            function decrementQuantity() {
+                if (quantity > 0) {
+                    quantity--;
+                }
+                $("#txtQuantity").val(quantity);
+            }
+            function updateQuantity() {
+                quantity = $("#txtQuantity").val();
+            }
         </script>
     </body>
 </html>

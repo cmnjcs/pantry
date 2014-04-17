@@ -61,6 +61,10 @@ a:hover {
 	float: right;
 }
 
+.modal-dialog {
+	width: 460px;
+}
+
 .clear {
     clear: both;
 }
