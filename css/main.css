@@ -110,3 +110,7 @@ background-color: tan;
 .dropdown-menu {
 	vertical-align: middle;
 }
+
+#timeSelectDropdownMenu {
+    margin-left: -10px;
+}

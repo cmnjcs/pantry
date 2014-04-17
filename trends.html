@@ -10,6 +10,14 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/main.css" rel="stylesheet">
         <link href='http://fonts.googleapis.com/css?family=Raleway:400,700,100' rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+               var dropdown = $("#timeSelectDropdown");
+                $("#timeSelectDropdownMenu").offset({left: dropdown.offset().left});
+            });
+        </script>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,7 +40,7 @@
                 <span id="dropdown_title">Select timeframe</span>
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu pagination-centered" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
+            <ul id="timeSelectDropdownMenu" class="dropdown-menu pagination-centered" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
                 <li role="presentation"><a id="weekSelect" role="menuitem" tabindex="-1" href="#">week</a></li>
                 <li role="presentation"><a id="monthSelect" role="menuitem" tabindex="-1" href="#">month</a></li>
                 <li role="presentation"><a id="threeMonthSelect" role="menuitem" tabindex="-1" href="#">three months</a></li>
@@ -59,7 +67,7 @@
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
         <script src="./js/Chart.js-master/Chart.js"></script>
-        
+
         <script>
             // goes here so that all the on-click methods can get the canvas references
             var interestContext = $("#chart").get(0).getContext("2d");
@@ -95,7 +103,7 @@
                         }
                     ]
                 }
-                
+
                 $("#chart").attr('width', '300px');
                 $("#chart").attr('height', '300px');
 
@@ -104,7 +112,7 @@
                 $("#spendingLabel").html("Spent $43")
                 $("#stockLabel").html("Had 17 items")
                 $("#wasteLabel").html("Lost $43")
-                
+
             })
             $('#monthSelect').click(function (e) {
                 e.preventDefault()
