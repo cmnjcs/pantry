@@ -1,208 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Trends</title>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trends</title>
 
-        <!-- Bootstrap -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/main.css" rel="stylesheet">
-        <link href='http://fonts.googleapis.com/css?family=Raleway:400,700,100' rel='stylesheet' type='text/css'>
-        <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,700,100' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-               var dropdown = $("#timeSelectDropdown");
-                $("#timeSelectDropdownMenu").offset({left: dropdown.offset().left});
-            });
-        </script>
+</head>
+<body>
+    <span id="navbar" onload="$(this).addClass('active')"></span>
+    <div class="page">
+    <h1>Trends</h1>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#spendingtab" data-toggle="tab" id="spending">Spending</a></li>
+      <li><a href="#stocktab" data-toggle="tab" id="stock">Stock</a></li>
+      <li><a href="#wastetab" data-toggle="tab" id="waste">Waste</a></li>
+    </ul>
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-    </head>
-    <body>
-        <span id="navbar" onload="$(this).addClass('active')"></span>
-        <div class="page">
-        <h1>Trends</h1>
-        <ul class="nav nav-tabs">
-          <li class="active"><a href="#spendingtab" data-toggle="tab" id="spending">Spending</a></li>
-          <li><a href="#stocktab" data-toggle="tab" id="stock">Stock</a></li>
-          <li><a href="#wastetab" data-toggle="tab" id="waste">Waste</a></li>
-        </ul>
-
-        <div class="dropdown text-center pagination-centered">
-            <button class="btn dropdown-toggle" type="button" id="timeSelectDropdown" data-toggle="dropdown">
-                <span id="dropdown_title">Select timeframe</span>
-                <span class="caret"></span>
-            </button>
-            <!-- saving in case we can fix it later
-            <ul class="dropdown-menu" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
-            -->
-            <ul id="timeSelectDropdownMenu" class="dropdown-menu pagination-centered" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
-                <li role="presentation"><a id="weekSelect" role="menuitem" tabindex="-1" href="#">week</a></li>
-                <li role="presentation"><a id="monthSelect" role="menuitem" tabindex="-1" href="#">month</a></li>
-                <li role="presentation"><a id="threeMonthSelect" role="menuitem" tabindex="-1" href="#">three months</a></li>
-            </ul> 
-
-        </div>
+    <div class="dropdown text-center pagination-centered">
+        <button class="btn dropdown-toggle" type="button" id="timeSelectDropdown" data-toggle="dropdown">
+            <span id="dropdown_title">Select timeframe</span>
+            <span class="caret"></span>
+        </button>
         
-        <!-- framework for html dropdown menu
-        <select id="timeSelect" onchange="updateGraph()">
-          <option selected>Select timeframe</option>
-          <option>week</option>
-          <option>month</option>  
-          <option>3 months</option>
-        </select>
-        -->
-        <!--location of the graph-->
-        <canvas id="chart" width="300" height="300">
-        </canvas>        
-        <!--where data about the tabs will actually go-->
-        <div class="tab-content">
-          <div class="tab-pane active" id="spendingtab">
-            <div id="spendingLabel">Spent</div>
-          </div>
-          <div class="tab-pane" id="stocktab">
-            <div id="stockLabel">Had</div>
-          </div>
-          <div class="tab-pane" id="wastetab">
-            <div id="wasteLabel">Lost</div>
-          </div>
-        </div>
+        <ul id="timeSelectDropdownMenu" class="dropdown-menu pagination-centered" role="menu" aria-labelledby="timeSelectDropdown" id="timeOptions">
+            <li role="presentation"><a id="weekSelect" role="menuitem" tabindex="-1" href="#">week</a></li>
+            <li role="presentation"><a id="monthSelect" role="menuitem" tabindex="-1" href="#">month</a></li>
+            <li role="presentation"><a id="threeMonthSelect" role="menuitem" tabindex="-1" href="#">three months</a></li>
+        </ul> 
 
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="js/bootstrap.min.js"></script>
-        <script src="./js/Chart.js-master/Chart.js"></script>
+    </div>
+    
+    
+    <canvas id="chart" width="300" height="300">
+    </canvas>        
 
-        <script>
-            // goes here so that all the on-click methods can get the canvas references
-            var interestContext = $("#chart").get(0).getContext("2d");
-            var ChartObject = new Chart(interestContext);
-
-            $("#navbar").load("./navbar.html");
-            $("#nav_add").addClass("active"); // TODO: make this line work
-            $(document).ready(function() {
-                $('#spending').click(function (e) {
-                    e.preventDefault()
-                    $(this).tab('show')
-                })
-                $('#stock').click(function (e) {
-                    e.preventDefault()
-                    $(this).tab('show')
-                })
-                $('#waste').click(function (e) {
-                    e.preventDefault()
-                    $(this).tab('show')
-                })
-                $('#weekSelect').click(function (e) {
-                    e.preventDefault()
-                    // generate graph data here
-                    var data = {
-                        labels : ["6 days","","","","2 days","","today"],
-                        datasets : [
-                            {
-                                fillColor : "rgba(151,187,205,0.5)",
-                                strokeColor : "rgba(151,187,205,1)",
-                                pointColor : "rgba(151,187,205,1)",
-                                pointStrokeColor : "#fff",
-                                data : [28,48,40,19,96,27,100]
-                            }
-                        ]
-                    }
-
-                    $("#chart").attr('width', '300px');
-                    $("#chart").attr('height', '300px');
-
-                    ChartObject.Line(data);
-
-                    $("#spendingLabel").html("Spent $43");
-                    $("#stockLabel").html("Had 17 items");
-                    $("#wasteLabel").html("Lost $43");
-                    $("#dropdown_title").html("Past week");
+    <div class="tab-content">
+      <div class="tab-pane active" id="spendingtab">
+        <div id="spendingLabel">Spent</div>
+      </div>
+      <div class="tab-pane" id="stocktab">
+        <div id="stockLabel">Had</div>
+      </div>
+      <div class="tab-pane" id="wastetab">
+        <div id="wasteLabel">Lost</div>
+      </div>
+    </div>
 
 
-                })
-                $('#monthSelect').click(function (e) {
-                    e.preventDefault()
-                    // generate graph data here
-                    var data = {
-                        labels : ["1 month","3 weeks","2 weeks","1 week","today"],
-                        datasets : [
-                            {
-                                fillColor : "rgba(151,187,205,0.5)",
-                                strokeColor : "rgba(151,187,205,1)",
-                                pointColor : "rgba(151,187,205,1)",
-                                pointStrokeColor : "#fff",
-                                data : [80,50,23,11,43]
-                            }
-                        ]
-                    }
-                    ChartObject.Line(data);
-
-                    $("#spendingLabel").html("Spent $163");
-                    $("#stockLabel").html("Had 33 items");
-                    $("#wasteLabel").html("Lost $45");
-                    $("#dropdown_title").html("Past month");
-
-                })
-                $('#threeMonthSelect').click(function (e) {
-                    e.preventDefault()
-                    // generate graph data here
-                    var data = {
-                        labels : ["3 months","2 months","1 month","today"],
-                        datasets : [
-                            {
-                                fillColor : "rgba(151,187,205,0.5)",
-                                strokeColor : "rgba(151,187,205,1)",
-                                pointColor : "rgba(151,187,205,1)",
-                                pointStrokeColor : "#fff",
-                                data : [80,70,95,44,12]
-                            }
-                        ]
-                    }
-                    ChartObject.Line(data);
-
-                    $("#spendingLabel").html("Spent $344");
-                    $("#stockLabel").html("Had 65 items");
-                    $("#wasteLabel").html("Lost $99");
-                    $("#dropdown_title").html("Past 3 months");
-                })
-                $('#timeOptions li').on('click', function() {
-                    $('#dropdown_title').html("Last ".concat($(this).find('a').html()));
-                });
-
-                var data = {
-                        labels : ["6 days","","","","2 days","","today"],
-                        datasets : [
-                            {
-                                fillColor : "rgba(151,187,205,0.5)",
-                                strokeColor : "rgba(151,187,205,1)",
-                                pointColor : "rgba(151,187,205,1)",
-                                pointStrokeColor : "#fff",
-                                data : [28,48,40,19,96,27,100]
-                            }
-                        ]
-                    }
-
-                $("#chart").attr('width', '300px');
-                $("#chart").attr('height', '300px');
-
-                ChartObject.Line(data);
-
-                $("#spendingLabel").html("Spent $43")
-                $("#stockLabel").html("Had 17 items")
-                $("#wasteLabel").html("Lost $43")
-                $("#dropdown_title").html("Past week");
-            });
-        </script>
-        </div>
-    </body>
-</html>
+    </div>
+</body>
