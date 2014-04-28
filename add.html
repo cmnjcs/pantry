@@ -1,126 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Add Item</title>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Item</title>
 
-        <!-- Bootstrap -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/main.css" rel="stylesheet">
-        <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
-        <link href='http://fonts.googleapis.com/css?family=Raleway:400,700,100' rel='stylesheet' type='text/css'>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,700,100' rel='stylesheet' type='text/css'>
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 
-        <script type="text/javascript">
-            var quantity = 1;
-            function incrementQuantity() {
-                quantity++;
-                $("#txtQuantity").val(quantity);
-            }
-            function decrementQuantity() {
-                if (quantity > 0){
-                    quantity--;
-                }
-                $("#txtQuantity").val(quantity);
-            }
-            function updateQuantity() {
-                quantity = $("#txtQuantity").val();
-            }
-            function populateDefaultData() {
-                $("#txtCost").val("5");
-                $("#exp_date").val("2014-04-26");
-            }
-            function getParameterByName(name) {
-                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                    results = regex.exec(location.search);
-                return results == null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
-            }
-            $(document).ready(function () {
-                if (getParameterByName("ok") != null) {
-                    $("#itemName").val("apple");
-                    populateDefaultData();
-                }
-            });
-        </script>
-    </head>
-    <body>
-        <span id="navbar" onload="$(this).addClass('active')"></span>
-        <div class="page">
-        <h1>Add</h1>
-        <form method="LINK" action="inventory.html">
-        <table>
-            <tr>
-                <td colspan="4" style="text-align:center">
-                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-barcode"></span></button>
-                    or
-                    <button type="submit" class="btn btn-default" formaction="camera.html"><span class="glyphicon glyphicon-camera"></span></button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Name:
-                </td>
-                <td>
-                <td>
-                    <input type="text" id="itemName" oninput="populateDefaultData()">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Quantity:
-                </td>
-                <td>
-                    <button type="button" class="btn btn-default" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus-sign"></span></button>
-                </td>
-                <td>
-                    <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
-                </td>
-                <td>
-                    <button type="button" class="btn btn-default" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus-sign"></span></button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Cost:
-                </td>
-                <td style="text-align:right">
-                    $
-                </td>
-                <td>
-                    <input type="number" id="txtCost" />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Expiration Date:
-                </td>
-                <td></td>
-                <td>
-                    <input type="date" id="exp_date" />
-                </td>
-            </tr>
-        </table>
-        
-        <button type="submit" class="btn btn-default" id="btnSave">Save</button>
-            </form>
-        </div>
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <script src="js/bootstrap.min.js"></script>
-        
-        <script>
-            $("#navbar").load("./navbar.html");
-            $("#nav_add").addClass("active"); // TODO: make this line work
-        </script>
-    </body>
-</html>
+    <script type="text/javascript" src="js/add.js"></script>
+</head>
+<body>
+    <span id="navbar" onload="$(this).addClass('active')"></span>
+    <div class="page">
+    <h1>Add</h1>
+    <form method="LINK" action="inventory.html">
+    <table>
+        <tr>
+            <td colspan="4" style="text-align:center">
+                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-barcode"></span></button>
+                or
+                <button type="submit" class="btn btn-default" formaction="camera.html"><span class="glyphicon glyphicon-camera"></span></button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Name:
+            </td>
+            <td></td>
+            <td>
+                <input type="text" id="itemName" oninput="populateDefaultData()">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Quantity:
+            </td>
+            <td>
+                <button type="button" class="btn btn-default" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus-sign"></span></button>
+            </td>
+            <td>
+                <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
+            </td>
+            <td>
+                <button type="button" class="btn btn-default" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus-sign"></span></button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Cost:
+            </td>
+            <td style="text-align:right">
+                $
+            </td>
+            <td>
+                <input type="number" id="txtCost" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Expiration Date:
+            </td>
+            <td></td>
+            <td>
+                <input type="date" id="exp_date" />
+            </td>
+        </tr>
+    </table>
+
+    <button type="submit" class="btn btn-default" id="btnSave">Save</button>
+        </form>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        $("#navbar").load("./navbar.html");
+        $("#nav_add").addClass("active"); // TODO: make this line work
+    </script>
+</body>
