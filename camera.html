@@ -1,6 +1,4 @@
 <template name="camera">
-    <span id="navbar" onload="$(this).addClass('active')"></span>
-
     <div class="page">
         <img src=images/apple.jpg />
         <form method="GET" action="./add.html">
@@ -8,14 +6,4 @@
             <button type="submit" class="btn btn-default" name="ok" value="yes"><span class="glyphicon glyphicon-ok"></span></button>
         </form>
     </div>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src=".js/bootstrap.min.js"></script>
-
-    <script>
-        $("#navbar").load("./navbar.html");
-        $("#nav_add").addClass("active"); // TODO: make this line work
-    </script>
 </template>

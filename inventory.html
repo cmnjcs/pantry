@@ -1,33 +1,27 @@
 <template name="inventory">
-    <span id="navbar" onload="$(this).addClass('active')"></span>
     <div id="container">
-    <h1>Inventory</h1>
-    <div id="items">
-        <!-- Modal -->
-        <div class="modal fade" id="trashModal" tabindex="-1" role="dialog" aria-labelledby="trashModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="trashModalLabel">Trashing <span id="trashItem"></span></h4>
-              </div>
-              <div class="modal-body">
-                    <button type="button" class="btn btn-default" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus-sign"></span></button>
-                    <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
-                    <button type="button" class="btn btn-default" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus-sign"></span></button>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashSelected">Trash Selected</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashAll">Trash All</button>
-              </div>
+        <h1>Inventory</h1>
+        <div id="items">
+            <!-- Modal -->
+            <div class="modal fade" id="trashModal" tabindex="-1" role="dialog" aria-labelledby="trashModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="trashModalLabel">Trashing <span id="trashItem"></span></h4>
+                        </div>
+                        <div class="modal-body">
+                            <button type="button" class="btn btn-default" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                            <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
+                            <button type="button" class="btn btn-default" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashSelected">Trash Selected</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashAll">Trash All</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
     </div>
-    </div> <!--/#container -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src=".js/bootstrap.min.js"></script>
-    <script src=".js/inventory.js"></script>
 </template>
