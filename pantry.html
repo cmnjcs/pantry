@@ -19,23 +19,4 @@
 
 <body>
     {{> navbar}}
-    {{> main}}
 </body>
-
-<template name="main">
-  {{#if isHome}}
-    {{> home}}
-  {{/if}}
-  {{#if isAdd}}
-    {{> add}}
-  {{/if}}
-  {{#if isCamera}}
-    {{> camera}}
-  {{/if}}
-  {{#if isInventory}}
-    {{> inventory}}
-  {{/if}}
-  {{#if isTrends}}
-    {{> trends}}
-  {{/if}}
-</template>

@@ -1,6 +1,6 @@
 <template name="home">
     <div class="summary">
-        <h1><a onclick="Meteor.call('gotoTrends')" href="#">Trends</a></h1>
+        <h1><a href="{{pathFor 'trends'}}">Trends</a></h1>
         <h4>This Month</h4>
         <table>
             <tr>
@@ -18,7 +18,7 @@
         </table>
     </div>
     <div class="summary">
-        <h1><a onclick="Meteor.call('gotoInventory')" href="#">Inventory</a></h1>
+        <h1><a href="{{pathFor 'inventory'}}">Inventory</a></h1>
         <table>
             <tr>
                 <td>Bad:</td>

@@ -1,23 +1,4 @@
 if (Meteor.isClient) {
-    Meteor.call('resetAll');
-    Session.set('isHome', true);
-
-    Template.main.isHome = function () {
-        return Session.get('isHome');
-    }
-    Template.main.isAdd = function () {
-        return Session.get('isAdd');
-    }
-    Template.main.isCamera = function () {
-        return Session.get('isCamera');
-    }
-    Template.main.isInventory = function () {
-        return Session.get('isInventory');
-    }
-    Template.main.isTrends = function () {
-        return Session.get('isTrends');
-    }
-
     Meteor.methods({
         resetAll: function() {
             Session.set('isHome', false);
@@ -59,3 +40,11 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
 }
+
+Router.map(function() {
+    this.route('home', {path: '/'});
+    this.route('add');
+    this.route('inventory');
+    this.route('camera');
+    this.route('trends');
+})
