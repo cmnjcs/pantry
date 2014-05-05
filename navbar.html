@@ -12,11 +12,11 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li id="nav_home"><a class="homeLink" href="#">Home</a></li>
+                    <li id="nav_home"><a onclick="Meteor.call('gotoHome')" href="#">Home</a></li>
 
-                    <li><a class="inventoryLink" href="#">Inventory</a></li>
-                    <li><a class="trendsLink" href="#">Trends</a></li>
-                    <li id="nav_add"><a class="addLink" href="#">Add</a></li>
+                    <li><a onclick="Meteor.call('gotoInventory')" href="#">Inventory</a></li>
+                    <li><a onclick="Meteor.call('gotoTrends')" href="#">Trends</a></li>
+                    <li id="nav_add"><a onclick="Meteor.call('gotoAdd')" href="#">Add</a></li>
                     <!-- Add back when we have these pages implemented
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<b class="caret"></b></a>

@@ -1,38 +1,7 @@
 if (Meteor.isClient) { 
-  var resetAll = function() {
-  Session.set('isHome', false);
-	Session.set('isAdd', false);
-	Session.set('isCamera', false);
-	Session.set('isInventory', false);
-	Session.set('isTrends', false);
- };
- 
- resetAll();
+ Meteor.call('resetAll');
  Session.set('isHome', true);
 
- Template.navbar.events({
-   'click .homeLink': function () {
-     if (typeof console !== 'undefined')
-			 resetAll();
-			 Session.set('isHome', true);
-   },
-   'click .addLink': function () {
-     if (typeof console !== 'undefined')
-			 resetAll();
-			 Session.set('isAdd', true);
-   },
-   'click .inventoryLink': function () {
-     if (typeof console !== 'undefined')
-			 resetAll();
-			 Session.set('isInventory', true);
-   },
-   'click .trendsLink': function () {
-     if (typeof console !== 'undefined')
-			 resetAll();
-			 Session.set('isTrends', true);
-   }
- });
- 
  Template.main.isHome = function () {
   return Session.get('isHome');
 	}
@@ -55,3 +24,38 @@ if (Meteor.isServer) {
     // code to run on server at startup
   });
 }
+
+Meteor.methods({
+    resetAll: function() {
+        Session.set('isHome', false);
+        Session.set('isAdd', false);
+        Session.set('isCamera', false);
+        Session.set('isInventory', false);
+        Session.set('isTrends', false);
+    },
+
+    gotoAdd: function() {
+        Meteor.call('resetAll');
+        Session.set('isAdd', true);
+    },
+
+    gotoHome: function() {
+        Meteor.call('resetAll');
+        Session.set('isHome', true);
+    },
+
+     gotoCamera: function() {
+        Meteor.call('resetAll');
+        Session.set('isCamera', true);
+    },
+
+     gotoInventory: function() {
+        Meteor.call('resetAll');
+        Session.set('isInventory', true);
+    },
+
+     gotoTrends: function() {
+        Meteor.call('resetAll');
+        Session.set('isTrends', true);
+    }
+})

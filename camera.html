@@ -1,7 +1,7 @@
 <template name="camera">
     <div class="page">
         <img src=images/apple.jpg />
-        <form method="GET" action="./add.html">
+        <form method="GET" action="Meteor.call('gotoAdd')">
             <button type="submit" class="btn btn-default" formmethod="link"><span class="glyphicon glyphicon-remove"></span></button>
             <button type="submit" class="btn btn-default" name="ok" value="yes"><span class="glyphicon glyphicon-ok"></span></button>
         </form>
