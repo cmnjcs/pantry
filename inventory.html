@@ -2,6 +2,23 @@
     <div id="container">
         <h1>Inventory</h1>
         <div id="items">
+        {{#each items}}
+          <div class="item panel panel-default">
+              <div class="panel-body"> 
+                  <img src="{{img_src}}" class="icon" height="70" width="70"/>
+                  <div class="info" style="float: left;">
+                      <h4><span class="item_name"> {{name}} </span></h4> x<span class="quantity"> {{quantity}} </span> <br>
+                     Expires: <input type="date" class="exp_date" value="{{exp_date}}">
+                  </div>
+                      <span class="item_buttons">
+                          <button type="button" class="btn btn-default plus"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                          <button type="button" class="btn btn-default minus"><span class="glyphicon glyphicon-minus-sign"></span></button>
+                          <button type="button" class="btn btn-default trash"><span class="glyphicon glyphicon-trash"></span></button>
+                      </span>
+                  <div class="clear"></div>
+              </div>
+          </div>
+        {{/each}}
             <!-- Modal -->
             <div class="modal fade" id="trashModal" tabindex="-1" role="dialog" aria-labelledby="trashModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
