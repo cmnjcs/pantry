@@ -1,13 +1,13 @@
 <template name="add">
     <div class="page">
     <h1>Add</h1>
-    <form method="LINK" action="inventory.html">
+    <form method="LINK" action="inventory">
     <table>
         <tr>
             <td colspan="4" style="text-align:center">
                 <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-barcode"></span></button>
                 or
-                <button type="submit" class="btn btn-default" formaction="camera.html"><span class="glyphicon glyphicon-camera"></span></button>
+                <button type="submit" class="btn btn-default" formaction="camera"><span class="glyphicon glyphicon-camera"></span></button>
             </td>
         </tr>
         <tr>
@@ -16,7 +16,7 @@
             </td>
             <td></td>
             <td>
-                <input type="text" id="itemName" oninput="populateDefaultData()">
+                <input type="text" id="itemName">
             </td>
         </tr>
         <tr>
@@ -27,7 +27,7 @@
                 <button type="button" class="btn btn-default" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus-sign"></span></button>
             </td>
             <td>
-                <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
+                <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()" min="1">
             </td>
             <td>
                 <button type="button" class="btn btn-default" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus-sign"></span></button>
@@ -41,7 +41,7 @@
                 $
             </td>
             <td>
-                <input type="number" id="txtCost" />
+                <input type="number" id="txtCost" step="0.01" min="0"/>
             </td>
         </tr>
         <tr>
@@ -58,13 +58,5 @@
     <button type="submit" class="btn btn-default" id="btnSave">Save</button>
         </form>
     </div>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src=".js/bootstrap.min.js"></script>
-
-    <script>
-        $("#navbar").load("./navbar.html");
-        $("#nav_add").addClass("active"); // TODO: make this line work
-    </script>
+    <script src=".js/add.js"></script>
 </template>

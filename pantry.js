@@ -14,12 +14,13 @@ if (Meteor.isClient) {
 					var cost = $('#txtCost').val();
 					var expDate = $('#expDate').val();
 					item = {uid: this.userId,
-									name: name,
-									exp_date: expDate,
-									quantity: quantity,
-									ppi: cost / quantity,
-									status: 'in_stock'
-								 };
+                            name: name,
+                            date_acquired: new Date(),
+                            exp_date: expDate,
+                            quantity: quantity,
+                            ppi: cost / quantity,
+                            status: 'in_stock'
+                         };
 					Items.insert(item);
 			}
 	})
