@@ -1,9 +1,28 @@
 Items = new Meteor.Collection("items");
 
 if (Meteor.isClient) {
+  /* INVENTORY */
   Template.inventory.items = function () {
     return Items.find({});
   };
+	
+	/* ADD */
+	Template.add.events({
+			'submit': function () {
+					var name = $('#itemName').val();
+					var quantity = $('#txtQuantity').val();
+					var cost = $('#txtCost').val();
+					var expDate = $('#expDate').val();
+					item = {uid: this.userId,
+									name: name,
+									exp_date: expDate,
+									quantity: quantity,
+									ppi: cost / quantity,
+									status: 'in_stock'
+								 };
+					Items.insert(item);
+			}
+	})
 }
 
 if (Meteor.isServer) {
