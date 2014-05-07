@@ -7,14 +7,12 @@ if (Meteor.isClient) {
   };
 	
   Template.inventory.quality = function (exp_date) {
-	  console.log(exp_date);
 		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
 		var today = new Date();
 		var exp = new Date(exp_date);
 
 		var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
-		console.log(diffDays);
-    if (diffDays <= 0) {
+    if (diffDays < 0) {
 			return "bad";
 		} else if (diffDays <= 3) {
 			return "okay";
@@ -23,14 +21,39 @@ if (Meteor.isClient) {
 		}
   };
 	
+	Template.inventory.show = function () {
+    return this.status == 'in_stock';
+  };
+	
+	Template.inventory.events({
+		'click .plus': function() {
+		console.log(this);
+			Items.update(this._id, {$inc: {quantity: 1}});
+		},
+		'click .minus': function() {
+			Items.update(this._id, {$inc: {quantity: -1}});
+
+			if (this.quantity <= 0) {
+				Items.update(this._id, {$set: {status: 'deleted'}});
+			}
+		},
+		'change .expDate': function() {
+				if ($('.expDate').val() != '') {
+					Items.update(this._id, {$set: {exp_date: $('.expDate').val()}});
+				} else {
+					// reset to valid date
+					$('.expDate').val(this.exp_date);
+				}
+		}
+	})
+	
 	/* ADD */
 	Template.add.events({
 			'submit': function () {
 					var name = $('#itemName').val();
-					var quantity = $('#txtQuantity').val();
+					var quantity = parseInt($('#txtQuantity').val());
 					var cost = $('#txtCost').val();
 					var expDate = $('#expDate').val();
-					console.log(expDate);
 					item = {uid: this.userId,
                             name: name,
                             date_acquired: new Date(),
@@ -58,7 +81,7 @@ if (Meteor.isServer) {
 				exp_date: "2014-04-16", 
 				quantity: 1, 
 				ppi: .9, 
-				status: "stock",
+				status: "in_stock",
 				date_removed: "",
 				type: "fruit",
 				date_acquired: "2014-04-10",
@@ -68,7 +91,7 @@ if (Meteor.isServer) {
 				exp_date: "2014-04-17", 
 				quantity: 2, 
 				ppi: .9, 
-				status: "stock",
+				status: "in_stock",
 				date_removed: "",
 				type: "fruit",
 				date_acquired: "2014-04-10",

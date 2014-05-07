@@ -3,12 +3,13 @@
         <h1>Inventory</h1>
         <div id="items">
         {{#each items}}
+        {{#if show}}
           <div class="item {{quality exp_date}} panel panel-default">
               <div class="panel-body"> 
                   <img src="{{img_src}}" class="icon" height="50" width="50"/>
                   <div class="info" style="float: left;">
                       <h4><span class="item_name"> {{name}} </span></h4> x<span class="quantity"> {{quantity}} </span> <br>
-                     Expires: <input type="date" class="exp_date" value="{{exp_date}}">
+                     Expires: <input type="date" class="expDate" value="{{exp_date}}">
                   </div>
                       <span class="item_buttons">
                           <button type="button" class="btn btn-default plus"><span class="glyphicon glyphicon-plus-sign"></span></button>
@@ -18,6 +19,7 @@
                   <div class="clear"></div>
               </div>
           </div>
+        {{/if}}
         {{/each}}
             <!-- Modal -->
             <div class="modal fade" id="trashModal" tabindex="-1" role="dialog" aria-labelledby="trashModalLabel" aria-hidden="true">
