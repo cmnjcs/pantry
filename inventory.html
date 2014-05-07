@@ -3,9 +3,9 @@
         <h1>Inventory</h1>
         <div id="items">
         {{#each items}}
-          <div class="item panel panel-default">
+          <div class="item {{quality exp_date}} panel panel-default">
               <div class="panel-body"> 
-                  <img src="{{img_src}}" class="icon" height="70" width="70"/>
+                  <img src="{{img_src}}" class="icon" height="50" width="50"/>
                   <div class="info" style="float: left;">
                       <h4><span class="item_name"> {{name}} </span></h4> x<span class="quantity"> {{quantity}} </span> <br>
                      Expires: <input type="date" class="exp_date" value="{{exp_date}}">

@@ -3,7 +3,24 @@ Items = new Meteor.Collection("items");
 if (Meteor.isClient) {
   /* INVENTORY */
   Template.inventory.items = function () {
-    return Items.find({});
+    return Items.find({}, {sort: { exp_date: 1}});
+  };
+	
+  Template.inventory.quality = function (exp_date) {
+	  console.log(exp_date);
+		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+		var today = new Date();
+		var exp = new Date(exp_date);
+
+		var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
+		console.log(diffDays);
+    if (diffDays <= 0) {
+			return "bad";
+		} else if (diffDays <= 3) {
+			return "okay";
+		} else {
+			return "good";
+		}
   };
 	
 	/* ADD */
@@ -13,6 +30,7 @@ if (Meteor.isClient) {
 					var quantity = $('#txtQuantity').val();
 					var cost = $('#txtCost').val();
 					var expDate = $('#expDate').val();
+					console.log(expDate);
 					item = {uid: this.userId,
                             name: name,
                             date_acquired: new Date(),
@@ -24,6 +42,11 @@ if (Meteor.isClient) {
 					Items.insert(item);
 			}
 	})
+	
+	/* COMMON */
+	Handlebars.registerHelper('some_helper', function() {
+     // code
+	});
 }
 
 if (Meteor.isServer) {
