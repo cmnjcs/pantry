@@ -27,6 +27,25 @@ if (Meteor.isClient) {
 		return inStock;
   };
 	
+	Template.itemHeader.worstQuality = function (name) {
+		i = Items.findOne({status:'in_stock', name:name}, {sort: { exp_date: 1}});
+		return Template.item.quality(i.exp_date);
+	};
+	
+	Template.itemHeader.totalQuantity = function (name) {
+		list = Items.find({status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch();
+		total = 0;
+		for (i = 0; i < list.length; i++) {
+			total += list[i].quantity;
+		}
+		return total;
+	};
+	
+	Template.itemHeader.soonestExp = function (name) {
+		i = Items.findOne({status:'in_stock', name:name}, {sort: { exp_date: 1}});
+		return i.exp_date
+	};
+	
 	// return quality (for coloring) based on expiration date
   Template.item.quality = function (exp_date) {
 		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds

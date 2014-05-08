@@ -13,14 +13,13 @@
 </template>
 
 <template name = "itemHeader">
-  {{!TODO: finish showing info in header}}
-  <div class="itemHeader  panel panel-default">
+  <div class="itemHeader {{worstQuality this}} panel panel-default">
       <div class="panel-body"> 
           <img src="" class="icon" height="50" width="50"/>
           <div class="info" style="float: left;">
-              <h4><span class="item_name"> {{this}} </span></h4> x<span class="quantity"> </span> 
+              <h4><span class="item_name"> {{this}} </span></h4> x<span class="quantity">{{totalQuantity this}}</span> 
               <br>
-             Soonest Expires: <input type="date" class="expDate" value="">
+             Soonest Expires: <input type="date" class="expDate" value="{{soonestExp this}}" readonly>
           </div>
               <span class="item_buttons">
                   <button type="button" class="btn btn-default trash"><span class="glyphicon glyphicon-trash"></span></button>
