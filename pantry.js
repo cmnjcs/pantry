@@ -48,8 +48,19 @@ if (Meteor.isClient) {
 	})
 	
 	/* ADD */
+    function validateAddForm () {
+        var name = $('#itemName').val();
+        var quantity = parseInt($('#txtQuantity').val());
+        var cost = $('#txtCost').val();
+        var expDate = $('#expDate').val();
+
+        var empty = name == '' || cost == '' || expDate == '';
+        return !empty;
+    }
+
 	Template.add.events({
-			'submit': function () {
+			'click #btnSave': function () {
+                if (validateAddForm()) {
 					var name = $('#itemName').val();
 					var quantity = parseInt($('#txtQuantity').val());
 					var cost = $('#txtCost').val();
@@ -63,6 +74,10 @@ if (Meteor.isClient) {
                             status: 'in_stock'
                          };
 					Items.insert(item);
+                    return true;
+                } else {
+                    return false;
+                }
 			},
 
         'keyup input#itemName': function () {
