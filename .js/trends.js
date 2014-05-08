@@ -1,10 +1,8 @@
 
-console.log("your mom")
-
 // global variables galore
 var current_tab = null;
-var interestContext = null;
-var ChartObject = null;
+var interestContext = $("#chart").get(0).getContext("2d");
+var ChartObject = new Chart(interestContext);
 
 // week select function
 function week_select (e) {
@@ -56,12 +54,7 @@ function week_select (e) {
 }
 
 
-$(window).load(function () {
-    console.log("got here")
-
-    interestContext = $("#chart").get(0).getContext("2d");
-    ChartObject = new Chart(interestContext);
-
+$(document).ready(function () {
     // all the odds and ends
 	var dropdown = $("#timeSelectDropdown");
 	$("#timeSelectDropdownMenu").offset({left: dropdown.offset().left});

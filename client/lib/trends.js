@@ -1,5 +1,6 @@
 
 console.log("your mom")
+console.log("zzz")
 
 // global variables galore
 var current_tab = null;
@@ -58,6 +59,9 @@ function week_select (e) {
 
 $(document).ready(function () {
     console.log("got here")
+
+    console.log($("#chart"))
+    console.log($("#chart").get(0))
 
     interestContext = $("#chart").get(0).getContext("2d");
     ChartObject = new Chart(interestContext);
