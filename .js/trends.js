@@ -16,9 +16,9 @@ function week_select (e) {
     var past_ms = today_ms - 604800000;
     var past = new Date(past_ms);
     // based on currently selected tab, selector is going to vary
-    var data_pointer = items.find({});
+    var data_pointer = null;
     if(current_tab == "spending") {
-        
+        items.find({date_acquired: {$gte: past}})
     } else if (current_tab == "stock") {
 
     } else if (current_tab == "waste") {
