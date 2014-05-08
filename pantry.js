@@ -63,7 +63,17 @@ if (Meteor.isClient) {
                             status: 'in_stock'
                          };
 					Items.insert(item);
-			}
+			},
+
+        'keyup input#itemName': function () {
+            AutoCompletion.autocomplete({
+                element: 'input#itemName',
+                collection: Items,
+                field: 'name',
+                limit: 5,
+                sort: {name:1}
+            });
+        }
 	})
 	
 	/* COMMON */
