@@ -1,9 +1,6 @@
 
-console.log("your mom")
-console.log("zzz")
-
 // global variables galore
-var current_tab = null;
+var current_tab = "spending";
 var interestContext = null;
 var ChartObject = null;
 
@@ -21,7 +18,7 @@ function week_select (e) {
     // based on currently selected tab, selector is going to vary
     var data_pointer = null;
     if(current_tab == "spending") {
-        items.find({date_acquired: {$gte: past}})
+        items.find({})
     } else if (current_tab == "stock") {
 
     } else if (current_tab == "waste") {
@@ -57,12 +54,8 @@ function week_select (e) {
 }
 
 
-$(document).ready(function () {
-    console.log("got here")
-
-    console.log($("#chart"))
-    console.log($("#chart").get(0))
-
+//$(document).ready(function () {
+Template.trends.rendered = function () {
     interestContext = $("#chart").get(0).getContext("2d");
     ChartObject = new Chart(interestContext);
 
@@ -92,7 +85,7 @@ $(document).ready(function () {
         current_tab = "waste"
     	$(this).tab('show')
     })
-    $('#weekSelect').click()
+    $('#weekSelect').click(week_select)
     $('#monthSelect').click(function (e) {
     	e.preventDefault()
         // generate graph data here
@@ -138,10 +131,10 @@ $(document).ready(function () {
         $("#dropdown_title").html("Past 3 months");
     })
 
-    ChartObject.Line(data);
+    //ChartObject.Line(data);
 
     $("#spendingLabel").html("Spent $43")
     $("#stockLabel").html("Had 17 items")
     $("#wasteLabel").html("Lost $43")
     $("#dropdown_title").html("Past week");
-});
+};
