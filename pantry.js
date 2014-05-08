@@ -74,15 +74,15 @@ if (Meteor.isClient) {
 			}
 		},
 		'change .expDate': function() {
-				if ($('.' + this._id).val() != '') {
-					Items.update(this._id, {$set: {exp_date: $('.' + this._id).val()}});
-				} else {
-					// reset to valid date
-					$('.' + this._id).val(this.exp_date);
-				}
+			if ($('.' + this._id).val() != '') {
+				Items.update(this._id, {$set: {exp_date: $('.' + this._id).val()}});
+			} else {
+				// reset to valid date
+				$('.' + this._id).val(this.exp_date);
+			}
 		},
-		'click .itemHeader' : function(event){
-        $('.item' + this).slideToggle('slow');
+		'click .itemHeader': function(event) {
+			$('.item' + this).slideToggle('slow');
     }
 	})
 	
