@@ -76,6 +76,7 @@ if (Meteor.isClient) {
 					Items.insert(item);
                     return true;
                 } else {
+                    alert("Please enter missing information");
                     return false;
                 }
 			},
