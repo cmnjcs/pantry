@@ -1,4 +1,5 @@
 Items = new Meteor.Collection("items");
+currentItem = [];
 
 if (Meteor.isClient) {
 	Meteor.startup(function(){
@@ -23,7 +24,7 @@ if (Meteor.isClient) {
 	
 	// get in stock items with given name, sorted by expiration date
 	Template.inventory.getItem = function (name) {
-    inStock = Items.find({status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
+		inStock = Items.find({status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
 		return inStock;
   };
 	
@@ -47,13 +48,13 @@ if (Meteor.isClient) {
 	};
 	
 	// return quality (for coloring) based on expiration date
-  Template.item.quality = function (exp_date) {
+	Template.item.quality = function (exp_date) {
 		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
 		var today = new Date();
 		var exp = new Date(exp_date);
 
 		var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
-    if (diffDays < 0) {
+		if (diffDays < 0) {
 			return "bad";
 		} else if (diffDays <= 3) {
 			return "okay";
@@ -69,6 +70,7 @@ if (Meteor.isClient) {
 		'click .minus': function() {
 			Items.update(this._id, {$inc: {quantity: -1}});
 
+			// TODO: create a new item and mark as deleted? idk
 			if (this.quantity <= 0) {
 				Items.update(this._id, {$set: {status: 'deleted'}});
 			}
@@ -81,11 +83,52 @@ if (Meteor.isClient) {
 				$('.' + this._id).val(this.exp_date);
 			}
 		},
+		'click .item': function(event) {
+			console.log('clicked ', this);
+			currentItem = this;
+		},
 		'click .itemHeader': function(event) {
 			$('.item' + this).slideToggle('slow');
-    }
+		},
+		'click #btnDecrement': function(event) {
+			quantity = parseInt($("#quantity").val());
+			if (quantity > 1) {
+				$("#quantity").val(quantity - 1);
+			}
+		}, 
+		'click #btnIncrement': function(event) {
+			quantity = parseInt($("#quantity").val());
+			if (quantity < currentItem.quantity) {
+				$("#quantity").val(quantity + 1);
+			}
+		},
+		'click #trashSelected': function(event) {
+			quantity = parseInt($("#quantity").val());
+			if (quantity == currentItem.quantity) {
+				Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
+			} else {
+				Items.update(currentItem._id, {$inc: {quantity: -quantity}});
+				console.log(currentItem.name, " = ", currentItem.quantity);
+				
+				// create trashed items
+				Items.insert({
+					uid: this.userId,
+					name: currentItem.name,
+					date_acquired: currentItem.date_acquired,
+					exp_date: currentItem.exp_date,
+					quantity: quantity,
+					ppi: currentItem.ppi,
+					status: 'trashed',
+					date_removed: new Date(),
+					img_src: currentItem.img_src
+				});				
+			}
+		},
+		'click #trashAll': function(event) {
+			Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
+		}
 	})
-	
+
 	/* ADD */
     function validateAddForm () {
         var name = $('#itemName').val();
@@ -142,8 +185,10 @@ if (Meteor.isServer) {
     // code to run on server at startup
 		if (Items.find().count() === 0) {
 			Items.insert({
+				uid: this.userId,
 				name: "apple", 
-				exp_date: "2014-04-16", 
+				exp_date: "2014-04-16",
+				date_acquired: new Date(),
 				quantity: 1, 
 				ppi: .9, 
 				status: "in_stock",
@@ -152,8 +197,10 @@ if (Meteor.isServer) {
 				date_acquired: "2014-04-10",
 				img_src: "images/apple.jpg"});
 			Items.insert({
+				uid: this.userId,
 				name: "banana", 
 				exp_date: "2014-04-17", 
+				date_acquired: new Date(),
 				quantity: 2, 
 				ppi: .9, 
 				status: "in_stock",
