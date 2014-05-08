@@ -1,46 +1,50 @@
 <template name="inventory">
-    <div id="container">
-        <h1>Inventory</h1>
-        <div id="items">
-        {{#each items}}
-        {{#if show}}
-          <div class="item {{quality exp_date}} panel panel-default">
-              <div class="panel-body"> 
-                  <img src="{{img_src}}" class="icon" height="50" width="50"/>
-                  <div class="info" style="float: left;">
-                      <h4><span class="item_name"> {{name}} </span></h4> x<span class="quantity"> {{quantity}} </span> <br>
-                     Expires: <input type="date" class="expDate" value="{{exp_date}}">
-                  </div>
-                      <span class="item_buttons">
-                          <button type="button" class="btn btn-default plus"><span class="glyphicon glyphicon-plus-sign"></span></button>
-                          <button type="button" class="btn btn-default minus"><span class="glyphicon glyphicon-minus-sign"></span></button>
-                          <button type="button" class="btn btn-default trash"><span class="glyphicon glyphicon-trash"></span></button>
-                      </span>
-                  <div class="clear"></div>
-              </div>
-          </div>
-        {{/if}}
+  <div id="container">
+    <h1>Inventory</h1>
+    {{#each itemNames}}
+        {{>itemHeader}}
+        <div class="item{{this}}">
+        {{#each getItem this}}
+          {{>item}}
         {{/each}}
-            <!-- Modal -->
-            <div class="modal fade" id="trashModal" tabindex="-1" role="dialog" aria-labelledby="trashModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="trashModalLabel">Trashing <span id="trashItem"></span></h4>
-                        </div>
-                        <div class="modal-body">
-                            <button type="button" class="btn btn-default" id="btnDecrement" onclick="decrementQuantity()"><span class="glyphicon glyphicon-minus-sign"></span></button>
-                            <input type="number" id="txtQuantity" value="1" oninput="updateQuantity()">
-                            <button type="button" class="btn btn-default" id="btnIncrement" onclick="incrementQuantity()"><span class="glyphicon glyphicon-plus-sign"></span></button>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashSelected">Trash Selected</button>
-                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="trashAll">Trash All</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name = "itemHeader">
+  {{!TODO: finish showing info in header}}
+  <div class="itemHeader  panel panel-default">
+      <div class="panel-body"> 
+          <img src="" class="icon" height="50" width="50"/>
+          <div class="info" style="float: left;">
+              <h4><span class="item_name"> {{this}} </span></h4> x<span class="quantity"> </span> 
+              <br>
+             Soonest Expires: <input type="date" class="expDate" value="">
+          </div>
+              <span class="item_buttons">
+                  <button type="button" class="btn btn-default trash"><span class="glyphicon glyphicon-trash"></span></button>
+              </span>
+          <div class="clear"></div>
+      </div>
+  </div>
+</template>
+
+<template name="item">
+  <div class="item {{quality exp_date}} panel panel-default">
+      <div class="panel-body"> 
+          <img src="{{img_src}}" class="icon" height="50" width="50"/>
+          <div class="info" style="float: left;">
+              <h4><span class="item_name"> {{name}} </span></h4> x<span class="quantity"> {{quantity}} </span> 
+              <button type="button" class="btn btn-default plus"><span class="glyphicon glyphicon-plus-sign"></span></button>
+                <button type="button" class="btn btn-default minus"><span class="glyphicon glyphicon-minus-sign"></span></button>
+              <br>
+             Expires: <input type="date" class="expDate {{_id}}" value="{{exp_date}}">
+          </div>
+              <span class="item_buttons">
+                  <button type="button" class="btn btn-default trash"><span class="glyphicon glyphicon-trash"></span></button>
+              </span>
+          <div class="clear"></div>
+      </div>
+  </div>
 </template>

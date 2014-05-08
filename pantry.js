@@ -1,12 +1,34 @@
 Items = new Meteor.Collection("items");
 
 if (Meteor.isClient) {
+	Meteor.startup(function(){
+		console.log('start');
+	});
+	
   /* INVENTORY */
-  Template.inventory.items = function () {
-    return Items.find({}, {sort: { exp_date: 1}});
+	// get item names sorted by their expiration (item with earliest expiration is first)
+  Template.inventory.itemNames = function () {
+    inStock = Items.find({status:'in_stock'}, {sort: { exp_date: 1}}).fetch(); //array
+		var list = [];
+		var itemNames = [];
+		for (i = 0; i < inStock.length; i++) {
+			// add all item names to set
+			if (itemNames.indexOf(inStock[i].name) < 0) {
+				itemNames.push(inStock[i].name);
+			}
+		}
+		
+		return itemNames;
   };
 	
-  Template.inventory.quality = function (exp_date) {
+	// get in stock items with given name, sorted by expiration date
+	Template.inventory.getItem = function (name) {
+    inStock = Items.find({status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
+		return inStock;
+  };
+	
+	// return quality (for coloring) based on expiration date
+  Template.item.quality = function (exp_date) {
 		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
 		var today = new Date();
 		var exp = new Date(exp_date);
@@ -21,13 +43,8 @@ if (Meteor.isClient) {
 		}
   };
 	
-	Template.inventory.show = function () {
-    return this.status == 'in_stock';
-  };
-	
 	Template.inventory.events({
 		'click .plus': function() {
-		console.log(this);
 			Items.update(this._id, {$inc: {quantity: 1}});
 		},
 		'click .minus': function() {
@@ -38,13 +55,16 @@ if (Meteor.isClient) {
 			}
 		},
 		'change .expDate': function() {
-				if ($('.expDate').val() != '') {
-					Items.update(this._id, {$set: {exp_date: $('.expDate').val()}});
+				if ($('.' + this._id).val() != '') {
+					Items.update(this._id, {$set: {exp_date: $('.' + this._id).val()}});
 				} else {
 					// reset to valid date
-					$('.expDate').val(this.exp_date);
+					$('.' + this._id).val(this.exp_date);
 				}
-		}
+		},
+		'click .itemHeader' : function(event){
+        $('.item' + this).slideToggle('slow');
+    }
 	})
 	
 	/* ADD */
@@ -68,7 +88,7 @@ if (Meteor.isClient) {
 	
 	/* COMMON */
 	Handlebars.registerHelper('some_helper', function() {
-     // code
+		// code
 	});
 }
 
