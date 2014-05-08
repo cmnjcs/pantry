@@ -57,7 +57,8 @@ function week_select (e) {
 }
 
 
-$(document).ready(function () {
+//$(document).ready(function () {
+Template.trends.rendered = function () {
     console.log("got here")
 
     console.log($("#chart"))
@@ -144,4 +145,4 @@ $(document).ready(function () {
     $("#stockLabel").html("Had 17 items")
     $("#wasteLabel").html("Lost $43")
     $("#dropdown_title").html("Past week");
-});
+};
