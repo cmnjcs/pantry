@@ -8,7 +8,19 @@ var ChartObject = null;
 function week_select (e) {
     e.preventDefault()
     // generate graph data here
-    var computed_data = []
+    var computed_data = null
+    computed_data = {
+        labels : ["6 days","5 days","4 days","3 days","2 days","1 day","today"],
+        datasets : [
+        {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,1)",
+            pointColor : "rgba(151,187,205,1)",
+            pointStrokeColor : "#fff",
+            data : [7,6,5,4,3,2,1]
+        }
+        ]
+    }
     // need to calculate how far back to look
     // get current date and subtract 7 days (604800000 ms)
     var today = new Date();
