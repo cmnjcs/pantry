@@ -29,40 +29,22 @@ a:hover {
 }
 
 /* colors taken from bootstrap alerts */
-.itemHeader.good {
-	/*background-color: #dff0d8;*/
-  background-color: #A0ED80;
+.good {
+	background-color: #dff0d8;
 	border-color: #d6e9c6;
 	/*color: #3c763d;*/
 }
 
-.itemHeader.okay {
-	/*background-color: #fcf8e3;*/
-  background-color: #EDD972;
+.okay {
+	background-color: #fcf8e3; 
 	border-color: #faebcc;
 	/*color: #8a6d3b;*/
 }
 
-.itemHeader.bad {
-	/*background-color: #f2dede;*/
-  background-color: #F59898;
+.bad {
+	background-color: #f2dede; 
 	border-color: #ebccd1; 
 	/*color: #a94442;*/
-}
-
-.item.good {
-  background-color: #B1ED98;
-	border-color: #d6e9c6;
-}
-
-.item.okay {
-  background-color: #EDDE93;
-	border-color: #faebcc;
-}
-
-.item.bad {
-  background-color: #F5B0B0;
-	border-color: #ebccd1; 
 }
 
 .item .info, .itemHeader .info {
