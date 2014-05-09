@@ -3,9 +3,10 @@
     <h1>Inventory</h1>
     {{>modal}}
     {{>alert}}
+    <center><button type="button" class="btn btn-default toggleExpand">Expand all</button></center>
     {{#each itemNames}}
         {{>itemHeader}}
-        <div class="item{{this}}">
+        <div class="item{{this}} toggable">
         {{#each getItem this}}
           {{>item}}
         {{/each}}

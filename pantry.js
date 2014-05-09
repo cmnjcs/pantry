@@ -178,6 +178,22 @@ if (Meteor.isClient) {
 		'click .close': function(event) {
 			$('.alert').hide();
 			//$('alert').slideToggle('slow');
+		},
+		'click .toggleExpand': function(event) {
+			text = $('.toggleExpand').html();
+			toggable = $('.toggable');
+			if (text == "Expand all"){
+				text = "Collapse all";
+				for (i = 0; i < toggable.length; i++) {
+					$(toggable[i]).slideDown();
+				}
+			} else {
+				text = "Expand all";
+				for (i = 0; i < toggable.length; i++) {
+					$(toggable[i]).slideUp();
+				}
+			}
+			$('.toggleExpand').html(text);
 		}
 	})
 
