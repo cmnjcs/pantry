@@ -59,6 +59,35 @@ if (Meteor.isClient) {
 		return tot;
 	}
 
+    Template.home.totalSpent = function() {
+        // TODO: limit to a month
+        var all = Items.find().fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].ppi * all[i].quantity;
+		}
+		return tot.toFixed(2);
+    }
+
+    Template.home.numItems = function() {
+        // TODO: limit to a month
+        var all = Items.find().fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+    }
+    Template.home.numWaste = function() {
+        // TODO: limit to a month
+        var all = Items.find({status:'trashed'}).fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+    }
+
   /* INVENTORY */
 	// get item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
@@ -157,8 +186,19 @@ if (Meteor.isClient) {
 		'click .minus': function() {
 			Items.update(this._id, {$inc: {quantity: -1}});
 
-			// TODO: create a new item and mark as deleted? idk
-			if (this.quantity <= 1) {
+			// create a new item and mark as deleted
+            Items.insert({
+                uid: this.userId,
+                name: currentItem.name,
+                date_acquired: currentItem.date_acquired,
+                exp_date: currentItem.exp_date,
+                quantity: 1,
+                ppi: currentItem.ppi,
+                status: 'deleted',
+                date_removed: new Date(),
+                img_src: currentItem.img_src
+            });
+            if (this.quantity <= 1) {
 				Template.alert.showAlert(this.name, "consumed");
 				Items.update(this._id, {$set: {status: 'deleted'}});
 			}
@@ -358,7 +398,7 @@ if (Meteor.isServer) {
 			Items.insert({
 				uid: this.userId,
 				name: "avocado", 
-				exp_date: "2014-05-010",
+				exp_date: "2014-05-01",
 				quantity: 1, 
 				ppi: .9, 
 				status: "in_stock",
