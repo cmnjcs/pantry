@@ -2,11 +2,15 @@ Items = new Meteor.Collection("items");
 currentItem = [];
 
 if (Meteor.isClient) {
+
+	
 	Meteor.startup(function(){
-		console.log('start');
+		Session.set('alertItemName', "");
+		Session.set('alertAction', "");
 	});
 	
   /* INVENTORY */
+
 	// get item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
     inStock = Items.find({status:'in_stock'}, {sort: { exp_date: 1}}).fetch(); //array
@@ -63,6 +67,26 @@ if (Meteor.isClient) {
 		}
   };
 	
+	Template.alert.getAlertItemName = function() {
+		return Session.get("alertItemName");
+	};
+	
+	Template.alert.getAlertAction = function() {
+		return Session.get("alertAction");
+	};
+	
+	Template.alert.showAlert = function(name, status) {
+		Session.set('alertItemName', name);
+		Session.set('alertAction', status);
+		// TODO: make smoother. and place above (z index) everything else)
+		$('.alert').fadeIn(1000);
+		//$('alert').slideToggle('slow');
+		Meteor.setTimeout(function() {
+			$(".alert").fadeOut(1000);
+			//$('alert').slideToggle('slow');
+		}, 3000);
+	};
+	
 	Template.inventory.events({
 		'click .plus': function() {
 			Items.update(this._id, {$inc: {quantity: 1}});
@@ -71,7 +95,8 @@ if (Meteor.isClient) {
 			Items.update(this._id, {$inc: {quantity: -1}});
 
 			// TODO: create a new item and mark as deleted? idk
-			if (this.quantity <= 0) {
+			if (this.quantity <= 1) {
+				Template.alert.showAlert(this.name, "consumed");
 				Items.update(this._id, {$set: {status: 'deleted'}});
 			}
 		},
@@ -105,10 +130,13 @@ if (Meteor.isClient) {
 		'click #trashSelected': function(event) {
 			quantity = parseInt($("#quantity").val());
 			if (quantity == currentItem.quantity) {
+				Template.alert.showAlert(currentItem.name, 'trashed');
 				Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
 			} else {
 				Items.update(currentItem._id, {$inc: {quantity: -quantity}});
 				console.log(currentItem.name, " = ", currentItem.quantity);
+				
+				Template.alert.showAlert(currentItem.name, "trashed");
 				
 				// create trashed items
 				Items.insert({
@@ -125,7 +153,12 @@ if (Meteor.isClient) {
 			}
 		},
 		'click #trashAll': function(event) {
+			Template.alert.showAlert(currentItem.name, "trashed");
 			Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
+		},
+		'click .close': function(event) {
+			$('.alert').hide();
+			//$('alert').slideToggle('slow');
 		}
 	})
 

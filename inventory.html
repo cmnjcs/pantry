@@ -2,6 +2,7 @@
   <div id="container">
     <h1>Inventory</h1>
     {{>modal}}
+    {{>alert}}
     {{#each itemNames}}
         {{>itemHeader}}
         <div class="item{{this}}">
@@ -68,5 +69,12 @@
       </div>
     </div>
   </div>
+</div>
+</template>
+
+<template name="alert">
+<div class="alert alert-warning fade in" style="display: none;">
+  <button type="button" class="close" aria-hidden="true">×</button>
+  <strong> {{getAlertItemName}} </strong> {{getAlertAction}}. <a href="#">Undo</a>
 </div>
 </template>
