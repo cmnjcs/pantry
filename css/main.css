@@ -137,20 +137,9 @@ a:hover {
 	
 	vertical-align: middle;
 }
-<<<<<<< HEAD
 
 td {
     padding: 3px;
-=======
-/*
-.timeSelectDropdownMenu {
-    margin-left: -10px;
-}
-*/
-.summary td {
-    padding: 5px 30px;
-    text-align: center;
->>>>>>> FETCH_HEAD
 }
 
 h1 {
