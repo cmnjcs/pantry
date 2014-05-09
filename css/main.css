@@ -124,8 +124,9 @@ a:hover {
     margin-left: -10px;
 }
 */
-td {
-    padding: 3px;
+.summary td {
+    padding: 5px 30px;
+    text-align: center;
 }
 
 h1 {

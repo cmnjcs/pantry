@@ -12,14 +12,53 @@ var daysUntil = function(day) {
 
 if (Meteor.isClient) {
 
-	
 	Meteor.startup(function(){
 		Session.set('alertItemName', "");
 		Session.set('alertAction', "");
 	});
 	
-  /* INVENTORY */
+	/* HOME */
+	Template.home.expired = function() {
+		date = new Date();
+		var d = date.getDate();
+    var m = date.getMonth() + 1;
+    var y = date.getFullYear();
+    today = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+		all = Items.find({status:'in_stock', exp_date: { $lt: today }}).fetch();
+		tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+	}
+	Template.home.almostExpired = function() {
+		return Template.home.total() - (Template.home.expired() + Template.home.good());
+	}
+	
+	Template.home.good = function() {
+		date = new Date();
+		date.setDate(date.getDate() + 3);
+		var d = date.getDate();
+    var m = date.getMonth() + 1;
+    var y = date.getFullYear();
+    goodDate = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+		all = Items.find({status:'in_stock', exp_date: { $gt: goodDate }}).fetch();
+		tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+	}
+	Template.home.total = function() {
+		all = Items.find({status:'in_stock'}).fetch();
+		tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+	}
 
+  /* INVENTORY */
 	// get item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
     inStock = Items.find({status:'in_stock'}, {sort: { exp_date: 1}}).fetch(); //array
@@ -70,7 +109,7 @@ if (Meteor.isClient) {
 		diffDays = daysUntil(exp_date);
 		if (diffDays < 0) {
 			return "bad";
-		} else if (diffDays <= 3) {
+		} else if (diffDays < 3) {
 			return "okay";
 		} else {
 			return "good";
