@@ -9,7 +9,7 @@
         {{#each getItem this}}
           {{>item}}
         {{/each}}
-      </div>
+        </div>
     {{/each}}
   </div>
 </template>
@@ -24,7 +24,6 @@
              Soonest Expires: <input type="date" class="expDate" value="{{soonestExp this}}" readonly> <br>({{daysTilExp this}})
           </div>
               <span class="item_buttons">
-                  <button type="button" class="btn btn-default trash"><span class="glyphicon glyphicon-trash"></span></button>
               </span>
           <div class="clear"></div>
       </div>

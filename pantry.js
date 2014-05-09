@@ -81,6 +81,8 @@ if (Meteor.isClient) {
 		days = daysUntil(exp_date);
 		if (days == 1 || days == -1) {
 			return days + " day";
+		} else if (days == 0) {
+			return "today";
 		} else {
 			return days + " days";
 		}
