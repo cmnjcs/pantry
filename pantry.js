@@ -157,11 +157,10 @@ if (Meteor.isClient) {
 		'click .minus': function() {
 			Items.update(this._id, {$inc: {quantity: -1}});
 
-			// TODO: create a new item and mark as deleted? idk
 			if (this.quantity <= 1) {
-				Template.alert.showAlert(this.name, "consumed");
 				Items.update(this._id, {$set: {status: 'deleted'}});
 			}
+			Template.alert.showAlert(this.name, "consumed");
 		},
 		'change .expDate': function() {
 			if ($('.' + this._id).val() != '') {
