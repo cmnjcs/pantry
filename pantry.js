@@ -7,19 +7,88 @@ var daysUntil = function(day) {
 	var exp = new Date(day);
 
 	var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
-	return diffDays;
+	return diffDays + 1; // off by one?
 }
 
 if (Meteor.isClient) {
-
-	
 	Meteor.startup(function(){
 		Session.set('alertItemName', "");
 		Session.set('alertAction', "");
 	});
 	
-  /* INVENTORY */
+	/* HOME */
+	Template.home.expired = function() {
+		date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth() + 1;
+		var y = date.getFullYear();
+		today = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+		all = Items.find({status:'in_stock', exp_date: { $lt: today }}).fetch();
+		console.log('today', today, all);
+		tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+	}
+	Template.home.almostExpired = function() {
+		return Template.home.total() - (Template.home.expired() + Template.home.good());
+	}
+	
+	Template.home.good = function() {
+		date = new Date();
+		date.setDate(date.getDate() + 2);
+		var d = date.getDate();
+		var m = date.getMonth() + 1;
+		var y = date.getFullYear();
+		goodDate = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+		all = Items.find({status:'in_stock', exp_date: { $gt: goodDate }}).fetch();
+		console.log('goodDate', goodDate, all);
+		tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+	}
+	Template.home.total = function() {
+		all = Items.find({status:'in_stock'}).fetch();
+		tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+	}
 
+    Template.home.totalSpent = function() {
+        // TODO: limit to a month
+        var all = Items.find().fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].ppi * all[i].quantity;
+		}
+		return tot.toFixed(2);
+    }
+
+    Template.home.numItems = function() {
+        // TODO: limit to a month
+        var all = Items.find().fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+    }
+    Template.home.numWaste = function() {
+        // TODO: limit to a month
+        var all = Items.find({status:'trashed'}).fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+    }
+
+  /* INVENTORY */
 	// get item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
     inStock = Items.find({status:'in_stock'}, {sort: { exp_date: 1}}).fetch(); //array
@@ -70,7 +139,7 @@ if (Meteor.isClient) {
 		diffDays = daysUntil(exp_date);
 		if (diffDays < 0) {
 			return "bad";
-		} else if (diffDays <= 3) {
+		} else if (diffDays < 3) {
 			return "okay";
 		} else {
 			return "good";
@@ -79,8 +148,10 @@ if (Meteor.isClient) {
 	
 	Template.item.daysTilExp = function (exp_date) {
 		days = daysUntil(exp_date);
-		if (days == 1 || days == -1) {
-			return days + " day";
+		if (days == 1) {
+			return "tomorrow";
+		} else if (days == -1) {
+			return "yesterday";
 		} else if (days == 0) {
 			return "today";
 		} else {
@@ -115,11 +186,22 @@ if (Meteor.isClient) {
 		'click .minus': function() {
 			Items.update(this._id, {$inc: {quantity: -1}});
 
-			// TODO: create a new item and mark as deleted? idk
+			// create a new item and mark as deleted
+            Items.insert({
+                uid: this.userId,
+                name: this.name,
+                date_acquired: this.date_acquired,
+                exp_date: this.exp_date,
+                quantity: 1,
+                ppi: this.ppi,
+                status: 'deleted',
+                date_removed: new Date(),
+                img_src: this.img_src
+            });
 			if (this.quantity <= 1) {
-				Template.alert.showAlert(this.name, "consumed");
 				Items.update(this._id, {$set: {status: 'deleted'}});
 			}
+			Template.alert.showAlert(this.name, "consumed");
 		},
 		'change .expDate': function() {
 			if ($('.' + this._id).val() != '') {
@@ -210,19 +292,27 @@ if (Meteor.isClient) {
 
 	Template.add.events({
 			'click #btnSave': function () {
-                if (validateAddForm()) {
+				if (validateAddForm()) {
 					var name = $('#itemName').val();
 					var quantity = parseInt($('#txtQuantity').val());
 					var cost = $('#txtCost').val();
 					var expDate = $('#expDate').val();
-					item = {uid: this.userId,
-                            name: name,
-                            date_acquired: new Date(),
-                            exp_date: expDate,
-                            quantity: quantity,
-                            ppi: cost / quantity,
-                            status: 'in_stock'
-                         };
+					// lols. it's almost like looking up images.
+					availableImgs = ["apple", "banana", "bread", "cheese", "chicken", "lettuce", "milk", "orange", "peach", "avocado"];
+					var img_src = "";
+					if (availableImgs.indexOf(name) >= 0) {
+						img_src = "images/" + name + ".jpg";
+					}
+					item = {
+									uid: this.userId,
+									name: name,
+									date_acquired: new Date(),
+									exp_date: expDate,
+									quantity: quantity,
+									ppi: cost / quantity,
+									status: 'in_stock',
+									img_src: img_src
+								};
 					Items.insert(item);
                     return true;
                 } else {
@@ -264,27 +354,69 @@ if (Meteor.isServer) {
 			Items.insert({
 				uid: this.userId,
 				name: "apple", 
-				exp_date: "2014-04-16",
-				date_acquired: new Date(),
+				exp_date: "2014-05-13",
 				quantity: 1, 
 				ppi: .9, 
 				status: "in_stock",
 				date_removed: "",
 				type: "fruit",
-				date_acquired: "2014-04-10",
+				date_acquired: "2014-05-08",
 				img_src: "images/apple.jpg"});
 			Items.insert({
 				uid: this.userId,
 				name: "banana", 
-				exp_date: "2014-04-17", 
-				date_acquired: new Date(),
+				exp_date: "2014-05-13", 
 				quantity: 2, 
 				ppi: .9, 
 				status: "in_stock",
 				date_removed: "",
 				type: "fruit",
-				date_acquired: "2014-04-10",
+				date_acquired: "2014-05-08",
 				img_src: "images/banana.jpg"});
+			Items.insert({
+				uid: this.userId,
+				name: "milk", 
+				exp_date: "2014-05-12",
+				quantity: 1, 
+				ppi: .9, 
+				status: "in_stock",
+				date_removed: "",
+				type: "fruit",
+				date_acquired: "2014-05-08",
+				img_src: "images/milk.jpg"});
+			Items.insert({
+				uid: this.userId,
+				name: "avocado", 
+				exp_date: "2014-05-08",
+				quantity: 3, 
+				ppi: .9, 
+				status: "in_stock",
+				date_removed: "",
+				type: "fruit",
+				date_acquired: "2014-05-07",
+				img_src: "images/avocado.jpg"});
+			Items.insert({
+				uid: this.userId,
+				name: "avocado", 
+				exp_date: "2014-05-01",
+				quantity: 1, 
+				ppi: .9, 
+				status: "in_stock",
+				date_removed: "",
+				type: "fruit",
+				date_acquired: "2014-05-07",
+				img_src: "images/avocado.jpg"});
+			Items.insert({
+				uid: this.userId,
+				name: "orange", 
+				exp_date: "2014-05-16",
+				quantity: 1, 
+				ppi: .9, 
+				status: "in_stock",
+				date_removed: "",
+				type: "fruit",
+				date_acquired: "2014-05-08",
+				img_src: "images/orange.jpg"});
 		}
   });
 }
