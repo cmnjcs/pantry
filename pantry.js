@@ -78,7 +78,7 @@ if (Meteor.isClient) {
 	Template.alert.showAlert = function(name, status) {
 		Session.set('alertItemName', name);
 		Session.set('alertAction', status);
-		// TODO: make smoother. and place above (z index) everything else)
+		// TODO: make smoother. and place above (z index) everything else
 		$('.alert').fadeIn(1000);
 		//$('alert').slideToggle('slow');
 		Meteor.setTimeout(function() {
@@ -205,6 +205,16 @@ if (Meteor.isClient) {
                 sort: {name:1}
             });
         }
+	})
+	
+	/* NAVBAR */
+	Template.navbar.events({
+		'click a': function(event) {
+			// simulate a click to collapse the mobile menu
+			if (event.currentTarget.className != "navbar-brand") {
+				$('.navbar-toggle').click();
+			}
+		}
 	})
 	
 	/* COMMON */
