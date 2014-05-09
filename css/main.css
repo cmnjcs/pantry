@@ -112,18 +112,18 @@ a:hover {
 }
 
 .dropdown-menu {
-	/*
+	
 	position: relative;
 	width: 10em;
 	float: none;
-	*/
+	
 	vertical-align: middle;
 }
-
+/*
 .timeSelectDropdownMenu {
     margin-left: -10px;
 }
-
+*/
 td {
     padding: 3px;
 }

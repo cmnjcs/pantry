@@ -73,7 +73,7 @@ Template.trends.rendered = function () {
 
     // all the odds and ends
 	var dropdown = $("#timeSelectDropdown");
-	$("#timeSelectDropdownMenu").offset({left: dropdown.offset().left});
+	//$("#timeSelectDropdownMenu").offset({left: dropdown.offset().left});
     $('#timeOptions li').on('click', function() {
         $('#dropdown_title').html("Last ".concat($(this).find('a').html()));
     });
@@ -149,4 +149,23 @@ Template.trends.rendered = function () {
     $("#stockLabel").html("Had 17 items")
     $("#wasteLabel").html("Lost $43")
     $("#dropdown_title").html("Past week");
+
+
+    var data = {
+        labels : ["6 days","5 days","4 days","3 days","2 days","1 day","today"],
+        datasets : [
+        {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,1)",
+            pointColor : "rgba(151,187,205,1)",
+            pointStrokeColor : "#fff",
+            data : [7,6,5,4,3,2,1]
+        }
+        ]
+    }
+
+    $("#chart").attr('width', '300px');
+    $("#chart").attr('height', '300px');
+
+    ChartObject.Line(data);
 };
