@@ -198,10 +198,10 @@ if (Meteor.isClient) {
                 date_removed: new Date(),
                 img_src: currentItem.img_src
             });
-            if (this.quantity <= 1) {
-				Template.alert.showAlert(this.name, "consumed");
+			if (this.quantity <= 1) {
 				Items.update(this._id, {$set: {status: 'deleted'}});
 			}
+			Template.alert.showAlert(this.name, "consumed");
 		},
 		'change .expDate': function() {
 			if ($('.' + this._id).val() != '') {
