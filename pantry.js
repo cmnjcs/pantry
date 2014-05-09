@@ -136,7 +136,10 @@ if (Meteor.isClient) {
 	
 	// return quality (for coloring) based on expiration date
 	Template.item.quality = function (exp_date) {
-		diffDays = daysUntil(exp_date);
+		var today = moment();
+		var exp = moment(exp_date);
+
+		var diffDays = exp.diff(today, 'days');
 		if (diffDays < 0) {
 			return "bad";
 		} else if (diffDays < 3) {
@@ -233,7 +236,7 @@ if (Meteor.isClient) {
 			quantity = parseInt($("#quantity").val());
 			if (quantity == currentItem.quantity) {
 				Template.alert.showAlert(currentItem.name, 'trashed');
-				Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
+				Items.update(currentItem._id, {$set: {date_removed: moment().format("YYYY-MM-DD"), status: 'trashed'}});
 			} else {
 				Items.update(currentItem._id, {$inc: {quantity: -quantity}});
 				
@@ -248,14 +251,14 @@ if (Meteor.isClient) {
 					quantity: quantity,
 					ppi: currentItem.ppi,
 					status: 'trashed',
-					date_removed: new Date(),
+					date_removed: moment().format("YYYY-MM-DD"),
 					img_src: currentItem.img_src
 				});				
 			}
 		},
 		'click #trashAll': function(event) {
 			Template.alert.showAlert(currentItem.name, "trashed");
-			Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
+			Items.update(currentItem._id, {$set: {date_removed: moment().format("YYYY-MM-DD"), status: 'trashed'}});
 		},
 		'click .close': function(event) {
 			$('.alert').hide();
@@ -290,6 +293,14 @@ if (Meteor.isClient) {
         return !empty;
     }
 
+    Template.add.recentAdds = function () {
+        return Session.get("recentAdds");
+    };
+
+    Template.add.rendered = function () {
+        Session.set("recentAdds", []);
+    }
+
 	Template.add.events({
 			'click #btnSave': function () {
 				if (validateAddForm()) {
@@ -304,17 +315,26 @@ if (Meteor.isClient) {
 						img_src = "images/" + name + ".jpg";
 					}
 					item = {
-									uid: this.userId,
-									name: name,
-									date_acquired: new Date(),
-									exp_date: expDate,
-									quantity: quantity,
-									ppi: cost / quantity,
-									status: 'in_stock',
-									img_src: img_src
-								};
+                        uid: this.userId,
+                        name: name,
+                        date_acquired: moment().format("YYYY-MM-DD"),
+                        exp_date: expDate,
+                        quantity: quantity,
+                        ppi: cost / quantity,
+                        status: 'in_stock',
+                        img_src: img_src
+                    };
 					Items.insert(item);
-                    return true;
+                    var ra = Session.get("recentAdds");
+                    ra.push(item);
+                    Session.set("recentAdds", ra);
+
+                    // reset inputs
+                    $('#itemName').val("");
+					$('#txtQuantity').val("1");
+                    $('#txtCost').val("");
+					$('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
+                    return false;
                 } else {
                     alert("Please enter missing information");
                     return false;
@@ -365,7 +385,7 @@ if (Meteor.isServer) {
 			Items.insert({
 				uid: this.userId,
 				name: "banana", 
-				exp_date: "2014-05-13", 
+				exp_date: "2014-05-13",
 				quantity: 2, 
 				ppi: .9, 
 				status: "in_stock",
