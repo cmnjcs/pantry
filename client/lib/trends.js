@@ -15,10 +15,22 @@ function week_select (e) {
     var today_ms = Date.parse(today); // get today in ms since sometime in 1970
     var past_ms = today_ms - 604800000;
     var past = new Date(past_ms);
+    past.setHours(0)
+    past.setMinutes(0)
+    past.setSeconds(0)
+    past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
     var data_pointer = null;
     if(current_tab == "spending") {
-        items.find({})
+        data_pointer = Items.find({})
+        data_pointer.forEach(function (item) {
+            console.log("item name is " + item.date_acquired)
+            var year_acq = item.date_acquired.substring(0,4)
+            var month_acq = parseInt(item.date_acquired.substring(5,7)) - 1
+            var day_acq = item.date_acquired.substring(8,10)
+            var item_date = new Date(year_acq, month_acq, day_acq)
+            console.log(item_date)
+        })
     } else if (current_tab == "stock") {
 
     } else if (current_tab == "waste") {
