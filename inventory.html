@@ -21,7 +21,7 @@
           <div class="info" style="float: left;">
               <h4><span class="item_name"> {{this}} </span></h4> x<span class="quantity">{{totalQuantity this}}</span> 
               <br>
-             Soonest Expires: <input type="date" class="expDate" value="{{soonestExp this}}" readonly>
+             Soonest Expires: <input type="date" class="expDate" value="{{soonestExp this}}" readonly> <br>({{daysTilExp this}})
           </div>
               <span class="item_buttons">
                   <button type="button" class="btn btn-default trash"><span class="glyphicon glyphicon-trash"></span></button>
@@ -40,7 +40,7 @@
               <button type="button" class="btn btn-default plus"><span class="glyphicon glyphicon-plus-sign"></span></button>
                 <button type="button" class="btn btn-default minus"><span class="glyphicon glyphicon-minus-sign"></span></button>
               <br>
-             Expires: <input type="date" class="expDate {{_id}}" value="{{exp_date}}">
+             Expires: <input type="date" class="expDate {{_id}}" value="{{exp_date}}"> ({{daysTilExp exp_date}})
           </div>
               <span class="item_buttons">
                   <button type="button" class="btn btn-default trash" data-toggle="modal" data-target="#trashModal"><span class="glyphicon glyphicon-trash"></span></button>

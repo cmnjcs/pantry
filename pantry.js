@@ -1,6 +1,15 @@
 Items = new Meteor.Collection("items");
 currentItem = [];
 
+var daysUntil = function(day) {
+	var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+	var today = new Date();
+	var exp = new Date(day);
+
+	var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
+	return diffDays;
+}
+
 if (Meteor.isClient) {
 
 	
@@ -48,16 +57,17 @@ if (Meteor.isClient) {
 	
 	Template.itemHeader.soonestExp = function (name) {
 		i = Items.findOne({status:'in_stock', name:name}, {sort: { exp_date: 1}});
-		return i.exp_date
+		return i.exp_date;
 	};
+	
+	Template.itemHeader.daysTilExp = function (name) {
+		i = Items.findOne({status:'in_stock', name:name}, {sort: { exp_date: 1}});
+		return Template.item.daysTilExp(i.exp_date);
+	}
 	
 	// return quality (for coloring) based on expiration date
 	Template.item.quality = function (exp_date) {
-		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-		var today = new Date();
-		var exp = new Date(exp_date);
-
-		var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
+		diffDays = daysUntil(exp_date);
 		if (diffDays < 0) {
 			return "bad";
 		} else if (diffDays <= 3) {
@@ -66,6 +76,15 @@ if (Meteor.isClient) {
 			return "good";
 		}
   };
+	
+	Template.item.daysTilExp = function (exp_date) {
+		days = daysUntil(exp_date);
+		if (days == 1 || days == -1) {
+			return days + " day";
+		} else {
+			return days + " days";
+		}
+	}
 	
 	Template.alert.getAlertItemName = function() {
 		return Session.get("alertItemName");
@@ -109,7 +128,6 @@ if (Meteor.isClient) {
 			}
 		},
 		'click .item': function(event) {
-			console.log('clicked ', this);
 			currentItem = this;
 		},
 		'click .itemHeader': function(event) {
@@ -134,7 +152,6 @@ if (Meteor.isClient) {
 				Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
 			} else {
 				Items.update(currentItem._id, {$inc: {quantity: -quantity}});
-				console.log(currentItem.name, " = ", currentItem.quantity);
 				
 				Template.alert.showAlert(currentItem.name, "trashed");
 				
@@ -218,8 +235,7 @@ if (Meteor.isClient) {
 	})
 	
 	/* COMMON */
-	Handlebars.registerHelper('some_helper', function() {
-		// code
+	Handlebars.registerHelper('helper', function() {
 	});
 }
 
