@@ -299,6 +299,7 @@ if (Meteor.isClient) {
 
     Template.add.rendered = function () {
         Session.set("recentAdds", []);
+        $('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
     }
 
 	Template.add.events({
