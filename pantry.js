@@ -189,14 +189,14 @@ if (Meteor.isClient) {
 			// create a new item and mark as deleted
             Items.insert({
                 uid: this.userId,
-                name: currentItem.name,
-                date_acquired: currentItem.date_acquired,
-                exp_date: currentItem.exp_date,
+                name: this.name,
+                date_acquired: this.date_acquired,
+                exp_date: this.exp_date,
                 quantity: 1,
-                ppi: currentItem.ppi,
+                ppi: this.ppi,
                 status: 'deleted',
                 date_removed: new Date(),
-                img_src: currentItem.img_src
+                img_src: this.img_src
             });
 			if (this.quantity <= 1) {
 				Items.update(this._id, {$set: {status: 'deleted'}});
