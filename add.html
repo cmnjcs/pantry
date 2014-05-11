@@ -4,11 +4,18 @@
     <form>
     <table>
         <tr>
-            <td colspan="4" style="text-align:center">
-                <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-barcode"></span></button>
+            <td></td>
+            <td colspan="2" style="text-align:center">
+                <!--
+<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-barcode"></span></button>
                 or
                 <button type="submit" class="btn btn-default" formaction="camera"><span class="glyphicon glyphicon-camera"></span></button>
+-->
+                <img id="itemImg" width="50px" height="50px" src="{{itemImage.url}}" />
+                <br />
+                <input type="file" id="imgInput" />
             </td>
+            <td></td>
         </tr>
         <tr>
             <td>

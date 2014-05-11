@@ -3,6 +3,7 @@
     "bootstrap-3": {},
     "iron-router": {},
     "autocompletion": {},
-    "moment": {}
+    "moment": {},
+    "collectionFS": {}
   }
 }

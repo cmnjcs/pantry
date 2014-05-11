@@ -1,5 +1,22 @@
 Items = new Meteor.Collection("items");
+ImageStore = new FS.Collection("imagestore", {
+    stores: [new FS.Store.FileSystem("imagestore", {path: "client/images"})],
+    filter: {
+        allow: {
+            contentTypes: ['image/*']
+        },
+        onInvalid: function (message) {
+            if (Meteor.isClient) {
+                alert(message);
+            } else {
+                console.log(message);
+            }
+        }
+    }
+});
+Images = new Meteor.Collection("images");
 currentItem = [];
+availableImgs = ["apple", "banana", "bread", "cheese", "chicken", "lettuce", "milk", "orange", "peach", "avocado"];
 
 var daysUntil = function(day) {
 	var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
@@ -8,6 +25,21 @@ var daysUntil = function(day) {
 
 	var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
 	return diffDays + 1; // off by one?
+}
+
+function getDefaultFoodImgSrc() {
+    return 'images/default_image.jpeg';
+}
+
+function getImageUrl(name) {
+    var imgs = Images.find({uid: this.userId, name: name}).fetch();
+    if (imgs.length === 0) {
+        if (availableImgs.indexOf(name) >= 0) {
+            return "images/" + name + ".jpg";
+        }
+        return getDefaultFoodImgSrc();
+    }
+    return ImageStore.find({_id: imgs[imgs.length-1].fid}).fetch()[0].url();
 }
 
 if (Meteor.isClient) {
@@ -24,7 +56,7 @@ if (Meteor.isClient) {
 		var y = date.getFullYear();
 		today = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
 		all = Items.find({status:'in_stock', exp_date: { $lt: today }}).fetch();
-		console.log('today', today, all);
+//		console.log('today', today, all);
 		tot = 0;
 		for (i = 0; i < all.length; i++) {
 			tot += all[i].quantity;
@@ -103,6 +135,10 @@ if (Meteor.isClient) {
 		
 		return itemNames;
   };
+
+    Template.itemHeader.getImgSrc = function (name) {
+        return getImageUrl(name);
+    }
 	
 	// get in stock items with given name, sorted by expiration date
 	Template.inventory.getItem = function (name) {
@@ -161,15 +197,15 @@ if (Meteor.isClient) {
 			return days + " days";
 		}
 	}
-	
+
 	Template.alert.getAlertItemName = function() {
 		return Session.get("alertItemName");
 	};
-	
+
 	Template.alert.getAlertAction = function() {
 		return Session.get("alertAction");
 	};
-	
+
 	Template.alert.showAlert = function(name, status) {
 		Session.set('alertItemName', name);
 		Session.set('alertAction', status);
@@ -302,45 +338,66 @@ if (Meteor.isClient) {
         $('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
     }
 
-	Template.add.events({
-			'click #btnSave': function () {
-				if (validateAddForm()) {
-					var name = $('#itemName').val();
-					var quantity = parseInt($('#txtQuantity').val());
-					var cost = $('#txtCost').val();
-					var expDate = $('#expDate').val();
-					// lols. it's almost like looking up images.
-					availableImgs = ["apple", "banana", "bread", "cheese", "chicken", "lettuce", "milk", "orange", "peach", "avocado"];
-					var img_src = "";
-					if (availableImgs.indexOf(name) >= 0) {
-						img_src = "images/" + name + ".jpg";
-					}
-					item = {
-                        uid: this.userId,
-                        name: name,
-                        date_acquired: moment().format("YYYY-MM-DD"),
-                        exp_date: expDate,
-                        quantity: quantity,
-                        ppi: cost / quantity,
-                        status: 'in_stock',
-                        img_src: img_src
-                    };
-					Items.insert(item);
-                    var ra = Session.get("recentAdds");
-                    ra.push(item);
-                    Session.set("recentAdds", ra);
+    Template.add.itemImage = function () {
+        var imgs = Images.find({uid: this.userId, name: $('#itemName').val()}).fetch();
+        if (imgs.length === 0) {
+            return {url: getDefaultFoodImgSrc()}
+        }
+        return ImageStore.find({_id: imgs[imgs.length-1].fid}).fetch()[0];
+    }
 
-                    // reset inputs
-                    $('#itemName').val("");
-					$('#txtQuantity').val("1");
-                    $('#txtCost').val("");
-					$('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
-                    return false;
-                } else {
-                    alert("Please enter missing information");
-                    return false;
+	Template.add.events({
+        'change input#itemName': function () {
+            $("#itemImg").prop("src", getImageUrl($('#itemName').val()));
+        },
+
+        'click #btnSave': function () {
+            if (validateAddForm()) {
+                var name = $('#itemName').val();
+                var quantity = parseInt($('#txtQuantity').val());
+                var cost = $('#txtCost').val();
+                var expDate = $('#expDate').val();
+                // lols. it's almost like looking up images.
+
+                var img_src = getDefaultFoodImgSrc();
+                if (availableImgs.indexOf(name) >= 0) {
+                    img_src = "images/" + name + ".jpg";
                 }
-			},
+                if (Session.get("uploadedImage") !== undefined) {
+                    var img = ImageStore.find({_id: Session.get("uploadedImage")}).fetch()[0]
+                    img_src = img.url();
+                    console.log(img_src);
+                     Images.insert({uid: this.userId, name: name, fid: img._id});
+                }
+                item = {
+                    uid: this.userId,
+                    name: name,
+                    date_acquired: moment().format("YYYY-MM-DD"),
+                    exp_date: expDate,
+                    quantity: quantity,
+                    ppi: cost / quantity,
+                    status: 'in_stock',
+                    img_src: img_src
+                };
+                Items.insert(item);
+                var ra = Session.get("recentAdds");
+                ra.push(item);
+                Session.set("recentAdds", ra);
+
+                // reset inputs
+                $('#itemName').val("");
+                $('#txtQuantity').val("1");
+                $('#txtCost').val("");
+                $('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
+                $('#imgInput').val("");
+                $("#itemImg").prop("src", getDefaultFoodImgSrc());
+                Session.set("uploadedImage", undefined);
+                return false;
+            } else {
+                alert("Please enter missing information");
+                return false;
+            }
+        },
 
         'keyup input#itemName': function () {
             AutoCompletion.autocomplete({
@@ -349,6 +406,18 @@ if (Meteor.isClient) {
                 field: 'name',
                 limit: 5,
                 sort: {name:1}
+            });
+        },
+
+        'change input#imgInput': function(event, template) {
+            FS.Utility.eachFile(event, function(file) {
+                file.owner = this.userId;
+//                file.name('apple.png');
+                ImageStore.insert(file, function (err, fileObj) {
+                    if (!err) {
+                        Session.set("uploadedImage", fileObj._id);
+                    }
+                });
             });
         }
 	})
