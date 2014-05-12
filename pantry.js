@@ -397,10 +397,6 @@ if (Meteor.isClient) {
     }
 
 	Template.add.events({
-        'change input#itemName': function () {
-            $("#itemImg").prop("src", getImageUrl($('#itemName').val()));
-        },
-
         'click #btnSave': function () {
             if (validateAddForm()) {
                 var name = $('#itemName').val();
@@ -454,6 +450,8 @@ if (Meteor.isClient) {
                 limit: 5,
                 sort: {name:1}
             });
+
+            $("#itemImg").prop("src", getImageUrl($('#itemName').val()))
         },
 
         'change input#imgInput': function(event, template) {
