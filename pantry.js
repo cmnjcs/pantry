@@ -520,7 +520,7 @@ var IR_BeforeHooks = {
 }
 
 // (Global) Before hooks for any route
-Router.onBeforeAction(IR_BeforeHooks.isLoggedIn);
+//Router.onBeforeAction(IR_BeforeHooks.isLoggedIn);
 
 Router.map(function() {
     this.route('home', {path: '/'});
