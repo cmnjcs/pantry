@@ -358,9 +358,6 @@ if (Meteor.isClient) {
 					sort: {name:1, status: "in_stock"}
 			});
 			name = $('#itemName').val();
-			var allItems = Items.find({uid: Meteor.userId(), status: "in_stock"},{name: 1, _id:0});
-			itemNames = [];
-			allItems.forEach(function(item){itemNames.push(item.name);});
 			Session.set("itemFilter", name);
 		},
 		'blur .headerName': function(event) {
