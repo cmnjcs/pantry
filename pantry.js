@@ -428,6 +428,7 @@ if (Meteor.isClient) {
                     status: 'in_stock',
                     img_src: img_src
                 };
+
                 Items.insert(item, function (err, docsInserted) {
                     if (!err) {
                         var ra = Session.get("recentAdds");
@@ -525,7 +526,13 @@ if (Meteor.isClient) {
 			Items.remove(this._id);
             ra.splice(itemIndex, 1);
             Session.set("recentAdds", ra);
-		}
+		},
+		
+        'blur .item_name': function(event) {
+            newName = $.trim($(event.currentTarget).html());
+            oldName = String(this.name);
+            Items.update(this._id, {$set: {name: newName}});
+        }
 	})
 	
 	/* NAVBAR */
