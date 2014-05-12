@@ -434,7 +434,7 @@ if (Meteor.isClient) {
                 // reset inputs
                 $('#itemName').val("");
                 $('#txtQuantity').val("1");
-                $('#txtCost').val("");
+                $('#txtCost').val("0.99");
                 $('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
                 $('#imgInput').val("");
                 $("#itemImg").prop("src", getDefaultFoodImgSrc());
