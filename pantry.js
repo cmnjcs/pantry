@@ -276,7 +276,9 @@ if (Meteor.isClient) {
 			currentItem = this;
 		},
 		'click .itemHeader': function(event) {
-			$('.item' + this).slideToggle('slow');
+			if (event.target.className != "headerName") {
+				$('.item' + this).slideToggle('slow');
+			}
 		},
 		'click #btnDecrement': function(event) {
 			quantity = parseInt($("#quantity").val());
