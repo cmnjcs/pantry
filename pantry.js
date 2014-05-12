@@ -48,6 +48,9 @@ function getDefaultFoodImgSrc() {
 }
 
 function getImageUrl(name) {
+    if (Session.get("uploadedImage") !== undefined) {
+        return ImageStore.find({_id: Session.get("uploadedImage")}).fetch()[0].url();
+    }
     //TODO: Fix to display image if name changed of an item with an image in folder
     var imgs = Images.find({uid: Meteor.userId(), name: name}).fetch();
     if (imgs.length === 0) {
@@ -394,6 +397,10 @@ if (Meteor.isClient) {
         $('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
     }
 
+    Template.add.destroyed = function () {
+        Session.set("uploadedImage", undefined);
+    }
+
     Template.add.itemImage = function () {
         var imgs = Images.find({uid: Meteor.userId(), name: $('#itemName').val()}).fetch();
         if (imgs.length === 0) {
@@ -462,7 +469,11 @@ if (Meteor.isClient) {
                 sort: {name:1}
             });
 
-            $("#itemImg").prop("src", getImageUrl($('#itemName').val()))
+            $("#itemImg").prop("src", getImageUrl($('#itemName').val()));
+        },
+
+        'change input#itemName': function () {
+            $("#itemImg").prop("src", getImageUrl($('#itemName').val()));
         },
 
         'change input#imgInput': function(event, template) {
@@ -472,9 +483,16 @@ if (Meteor.isClient) {
                 ImageStore.insert(file, function (err, fileObj) {
                     if (!err) {
                         Session.set("uploadedImage", fileObj._id);
+                        $("#itemImg").prop("src", fileObj.url());
                     }
                 });
             });
+        },
+
+        'click #btnCancelImg': function () {
+            Session.set("uploadedImage", undefined);
+            $("#itemImg").prop("src", getImageUrl($('#itemName').val()));
+            $('#imgInput').val("");
         },
 
         'click .minus': function() {
