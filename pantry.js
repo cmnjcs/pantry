@@ -46,6 +46,7 @@ if (Meteor.isClient) {
 	Meteor.startup(function(){
 		Session.set('alertItemName', "");
 		Session.set('alertAction', "");
+		Session.set('oldestFirst', true);
 	});
 	
 	/* HOME */
@@ -123,7 +124,11 @@ if (Meteor.isClient) {
   /* INVENTORY */
 	// get item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
-    inStock = Items.find({status:'in_stock', uid: Meteor.userId()}, {sort: { exp_date: 1}}).fetch(); //array
+		if (Session.get('oldestFirst') == false) {
+			inStock = Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: 1}}).fetch(); //array
+		} else {
+			inStock = Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: -1}}).fetch(); //array
+		}
 		var list = [];
 		var itemNames = [];
 		for (i = 0; i < inStock.length; i++) {
@@ -142,7 +147,11 @@ if (Meteor.isClient) {
 	
 	// get in stock items with given name, sorted by expiration date
 	Template.inventory.getItem = function (name) {
-		inStock = Items.find({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
+		if (Session.get('oldestFirst') == false) {
+			inStock = Items.find({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
+		} else {
+			inStock = Items.find({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
+		}
 		return inStock;
   };
 	
@@ -315,6 +324,17 @@ if (Meteor.isClient) {
 				}
 			}
 			$('.toggleExpand').html(text);
+		},
+		'click .toggleSort': function(event) {
+			text = $('.toggleSort').html();
+			if (text == "Newest First"){
+				text = "Oldest First";
+				Session.set('oldestFirst', true);
+			} else {
+				text = "Newest First";
+				Session.set('oldestFirst', false);
+			}
+			$('.toggleSort').html(text);
 		}
 	})
 
