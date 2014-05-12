@@ -32,7 +32,7 @@ function getDefaultFoodImgSrc() {
 }
 
 function getImageUrl(name) {
-    var imgs = Images.find({uid: this.userId, name: name}).fetch();
+    var imgs = Images.find({uid: Meteor.userId(), name: name}).fetch();
     if (imgs.length === 0) {
         if (availableImgs.indexOf(name) >= 0) {
             return "images/" + name + ".jpg";
@@ -55,7 +55,7 @@ if (Meteor.isClient) {
 		var m = date.getMonth() + 1;
 		var y = date.getFullYear();
 		today = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
-		all = Items.find({status:'in_stock', exp_date: { $lt: today }}).fetch();
+		all = Items.find({uid: Meteor.userId(), status:'in_stock', exp_date: { $lt: today }}).fetch();
 //		console.log('today', today, all);
 		tot = 0;
 		for (i = 0; i < all.length; i++) {
@@ -74,7 +74,7 @@ if (Meteor.isClient) {
 		var m = date.getMonth() + 1;
 		var y = date.getFullYear();
 		goodDate = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
-		all = Items.find({status:'in_stock', exp_date: { $gt: goodDate }}).fetch();
+		all = Items.find({uid: Meteor.userId(), status:'in_stock', exp_date: { $gt: goodDate }}).fetch();
 		console.log('goodDate', goodDate, all);
 		tot = 0;
 		for (i = 0; i < all.length; i++) {
@@ -83,7 +83,7 @@ if (Meteor.isClient) {
 		return tot;
 	}
 	Template.home.total = function() {
-		all = Items.find({status:'in_stock'}).fetch();
+		all = Items.find({uid: Meteor.userId(), status:'in_stock'}).fetch();
 		tot = 0;
 		for (i = 0; i < all.length; i++) {
 			tot += all[i].quantity;
@@ -93,7 +93,7 @@ if (Meteor.isClient) {
 
     Template.home.totalSpent = function() {
         // TODO: limit to a month
-        var all = Items.find().fetch();
+        var all = Items.find({uid: Meteor.userId()}).fetch();
 		var tot = 0;
 		for (i = 0; i < all.length; i++) {
 			tot += all[i].ppi * all[i].quantity;
@@ -103,7 +103,7 @@ if (Meteor.isClient) {
 
     Template.home.numItems = function() {
         // TODO: limit to a month
-        var all = Items.find().fetch();
+        var all = Items.find({uid: Meteor.userId()}).fetch();
 		var tot = 0;
 		for (i = 0; i < all.length; i++) {
 			tot += all[i].quantity;
@@ -112,7 +112,7 @@ if (Meteor.isClient) {
     }
     Template.home.numWaste = function() {
         // TODO: limit to a month
-        var all = Items.find({status:'trashed'}).fetch();
+        var all = Items.find({uid: Meteor.userId(), uid: Meteor.userId(), status:'trashed'}).fetch();
 		var tot = 0;
 		for (i = 0; i < all.length; i++) {
 			tot += all[i].quantity;
@@ -123,7 +123,7 @@ if (Meteor.isClient) {
   /* INVENTORY */
 	// get item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
-    inStock = Items.find({status:'in_stock'}, {sort: { exp_date: 1}}).fetch(); //array
+    inStock = Items.find({status:'in_stock', uid: Meteor.userId()}, {sort: { exp_date: 1}}).fetch(); //array
 		var list = [];
 		var itemNames = [];
 		for (i = 0; i < inStock.length; i++) {
@@ -142,17 +142,17 @@ if (Meteor.isClient) {
 	
 	// get in stock items with given name, sorted by expiration date
 	Template.inventory.getItem = function (name) {
-		inStock = Items.find({status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
+		inStock = Items.find({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch(); //array
 		return inStock;
   };
 	
 	Template.itemHeader.worstQuality = function (name) {
-		i = Items.findOne({status:'in_stock', name:name}, {sort: { exp_date: 1}});
+		i = Items.findOne({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}});
 		return Template.item.quality(i.exp_date);
 	};
 	
 	Template.itemHeader.totalQuantity = function (name) {
-		list = Items.find({status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch();
+		list = Items.find({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}}).fetch();
 		total = 0;
 		for (i = 0; i < list.length; i++) {
 			total += list[i].quantity;
@@ -161,12 +161,12 @@ if (Meteor.isClient) {
 	};
 	
 	Template.itemHeader.soonestExp = function (name) {
-		i = Items.findOne({status:'in_stock', name:name}, {sort: { exp_date: 1}});
+		i = Items.findOne({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}});
 		return i.exp_date;
 	};
 	
 	Template.itemHeader.daysTilExp = function (name) {
-		i = Items.findOne({status:'in_stock', name:name}, {sort: { exp_date: 1}});
+		i = Items.findOne({uid: Meteor.userId(), status:'in_stock', name:name}, {sort: { exp_date: 1}});
 		return Template.item.daysTilExp(i.exp_date);
 	}
 	
@@ -227,7 +227,7 @@ if (Meteor.isClient) {
 
 			// create a new item and mark as deleted
             Items.insert({
-                uid: this.userId,
+                uid: Meteor.userId(),
                 name: this.name,
                 date_acquired: this.date_acquired,
                 exp_date: this.exp_date,
@@ -280,7 +280,7 @@ if (Meteor.isClient) {
 				
 				// create trashed items
 				Items.insert({
-					uid: this.userId,
+					uid: Meteor.userId(),
 					name: currentItem.name,
 					date_acquired: currentItem.date_acquired,
 					exp_date: currentItem.exp_date,
@@ -339,7 +339,7 @@ if (Meteor.isClient) {
     }
 
     Template.add.itemImage = function () {
-        var imgs = Images.find({uid: this.userId, name: $('#itemName').val()}).fetch();
+        var imgs = Images.find({uid: Meteor.userId(), name: $('#itemName').val()}).fetch();
         if (imgs.length === 0) {
             return {url: getDefaultFoodImgSrc()}
         }
@@ -367,10 +367,10 @@ if (Meteor.isClient) {
                     var img = ImageStore.find({_id: Session.get("uploadedImage")}).fetch()[0]
                     img_src = img.url();
                     console.log(img_src);
-                     Images.insert({uid: this.userId, name: name, fid: img._id});
+                     Images.insert({uid: Meteor.userId(), name: name, fid: img._id});
                 }
                 item = {
-                    uid: this.userId,
+                    uid: Meteor.userId(),
                     name: name,
                     date_acquired: moment().format("YYYY-MM-DD"),
                     exp_date: expDate,
@@ -411,7 +411,7 @@ if (Meteor.isClient) {
 
         'change input#imgInput': function(event, template) {
             FS.Utility.eachFile(event, function(file) {
-                file.owner = this.userId;
+                file.owner = Meteor.userId();
 //                file.name('apple.png');
                 ImageStore.insert(file, function (err, fileObj) {
                     if (!err) {
@@ -511,10 +511,22 @@ if (Meteor.isServer) {
   });
 }
 
+var IR_BeforeHooks = {
+    isLoggedIn: function() {
+        if (this.path != '/login' && !(Meteor.loggingIn() || Meteor.user())) {
+          Router.go('login');
+        }
+    }
+}
+
+// (Global) Before hooks for any route
+Router.onBeforeAction(IR_BeforeHooks.isLoggedIn);
+
 Router.map(function() {
     this.route('home', {path: '/'});
     this.route('add');
     this.route('inventory');
     this.route('camera');
     this.route('trends');
+    this.route('login');
 })

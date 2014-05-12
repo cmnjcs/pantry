@@ -13,3 +13,5 @@ autocompletion
 moment
 collectionFS
 cfs-filesystem
+accounts-ui
+accounts-password
