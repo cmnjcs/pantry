@@ -424,7 +424,7 @@ if (Meteor.isClient) {
                     status: 'in_stock',
                     img_src: img_src
                 };
-                Items.insert(item);
+                item._id = Items.insert(item);
                 var ra = Session.get("recentAdds");
                 ra.push(item);
                 Session.set("recentAdds", ra);
@@ -466,7 +466,13 @@ if (Meteor.isClient) {
                     }
                 });
             });
-        }
+        },
+				
+			'blur .item_name': function(event) {
+				newName = $.trim($(event.currentTarget).html());
+				oldName = String(this.name);
+				Items.update(this._id, {$set: {name: newName}});
+			}
 	})
 	
 	/* NAVBAR */
