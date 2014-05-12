@@ -28,10 +28,9 @@ function week_select (e) {
     past.setSeconds(0)
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
-    var data_pointer = null;
+    var data_pointer = Items.find();
     var data_prep = fillArray(0, 7); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
-        data_pointer = Items.find()
         data_pointer.forEach(function (item) {
             // console.log(item)
             // console.log("item name is " + item.date_acquired)
@@ -51,7 +50,23 @@ function week_select (e) {
     } else if (current_tab == "stock") {
 
     } else if (current_tab == "waste") {
-
+        data_pointer.forEach(function (item) {
+            // console.log(item)
+            // console.log("item name is " + item.date_acquired)
+            if(item.status = "trashed") {
+                var year_acq = item.date_removed.substring(0,4)
+                var month_acq = parseInt(item.date_removed.substring(5,7)) - 1
+                var day_acq = item.date_removed.substring(8,10)
+                var item_date = new Date(year_acq, month_acq, day_acq)
+                console.log(item_date)
+                if(item_date > past) {  // if the item was acquired recently enough to be of interest
+                    var difference = Math.floor(((new Date()) - item_date) / 86400000)  // difference is the number of days in the past
+                    // console.log(difference);
+                    data_prep[difference] = data_prep[difference] + item.quantity
+                }
+            }
+            // console.log(data_prep)
+        })
     } else {
         alert("error! error! D: wahhh")
     }
@@ -66,23 +81,31 @@ function week_select (e) {
             strokeColor : "rgba(151,187,205,1)",
             pointColor : "rgba(151,187,205,1)",
             pointStrokeColor : "#fff",
-            data : data_prep
+            data : data_prep,
         }
         ]
+    }
+
+    var options = {
+        scaleSteps : 10
     }
 
     var total_spent = data_prep.reduce(function(a, b) {
         return a + b;
     });
 
+    var total_wasted = data_prep.reduce(function(a, b) {
+        return a + b;
+    });
+
     $("#chart").attr('width', '300px');
     $("#chart").attr('height', '300px');
 
-    ChartObject.Line(data);
+    ChartObject.Line(data, options);
 
     $("#spendingLabel").html("Spent $".concat(total_spent.toFixed(2)));
     $("#stockLabel").html("Had 17 items");
-    $("#wasteLabel").html("Lost $43");
+    $("#wasteLabel").html("Wasted ".concat(total_wasted));
     $("#dropdown_title").html("Past week");
 
 }
@@ -102,30 +125,44 @@ function month_select (e) {
     past.setSeconds(0)
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
-    var data_pointer = null;
+    var data_pointer = Items.find();
     var data_prep = fillArray(0, 29); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
-        data_pointer = Items.find()
         data_pointer.forEach(function (item) {
-            console.log(item)
+            // console.log(item)
             // console.log("item name is " + item.date_acquired)
             var year_acq = item.date_acquired.substring(0,4)
             var month_acq = parseInt(item.date_acquired.substring(5,7)) - 1
             var day_acq = item.date_acquired.substring(8,10)
             var item_date = new Date(year_acq, month_acq, day_acq)
-            console.log(item_date)
+            // console.log(item_date)
             if(item_date > past) {  // if the item was acquired recently enough to be of interest
                 var difference = Math.floor(((new Date()) - item_date) / 86400000)  // difference is the number of days in the past
-                console.log(difference);
+                // console.log(difference);
                 data_prep[difference] = data_prep[difference] + item.ppi * item.quantity
             }
-            console.log(data_prep)
-            
+            // console.log(data_prep)
         })
     } else if (current_tab == "stock") {
 
     } else if (current_tab == "waste") {
-
+        data_pointer.forEach(function (item) {
+            // console.log(item)
+            // console.log("item name is " + item.date_acquired)
+            if(item.status = "trashed") {
+                var year_acq = item.date_removed.substring(0,4)
+                var month_acq = parseInt(item.date_removed.substring(5,7)) - 1
+                var day_acq = item.date_removed.substring(8,10)
+                var item_date = new Date(year_acq, month_acq, day_acq)
+                // console.log(item_date)
+                if(item_date > past) {  // if the item was acquired recently enough to be of interest
+                    var difference = Math.floor(((new Date()) - item_date) / 86400000)  // difference is the number of days in the past
+                    // console.log(difference);
+                    data_prep[difference] = data_prep[difference] + item.quantity
+                }
+            }
+            // console.log(data_prep)
+        })
     } else {
         alert("error! error! D: wahhh")
     }
@@ -138,26 +175,33 @@ function month_select (e) {
             strokeColor : "rgba(151,187,205,1)",
             pointColor : "rgba(151,187,205,1)",
             pointStrokeColor : "#fff",
-            data : data_prep
+            data : data_prep,
         }
         ]
     }
 
     data_prep.reverse()
-    console.log(data.labels.length)
+
+    var options = {
+        scaleSteps : 10
+    }
 
     var total_spent = data_prep.reduce(function(a, b) {
+        return a + b;
+    });
+
+    var total_wasted = data_prep.reduce(function(a, b) {
         return a + b;
     });
 
     $("#chart").attr('width', '300px');
     $("#chart").attr('height', '300px');
 
-    ChartObject.Line(data);
+    ChartObject.Line(data, options);
 
     $("#spendingLabel").html("Spent $".concat(total_spent.toFixed(2)));
     $("#stockLabel").html("Had 17 items");
-    $("#wasteLabel").html("Lost $43");
+    $("#wasteLabel").html("Wasted ".concat(total_wasted));
     $("#dropdown_title").html("Past week");
 
 }
@@ -177,31 +221,46 @@ function threeMonth_select (e) {
     past.setSeconds(0)
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
-    var data_pointer = null;
+    var data_pointer = Items.find();
     var data_prep = fillArray(0, 3); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
-        data_pointer = Items.find()
         data_pointer.forEach(function (item) {
-            console.log(item)
+            // console.log(item)
             // console.log("item name is " + item.date_acquired)
             var year_acq = item.date_acquired.substring(0,4)
             var month_acq = parseInt(item.date_acquired.substring(5,7)) - 1
             var day_acq = item.date_acquired.substring(8,10)
             var item_date = new Date(year_acq, month_acq, day_acq)
-            console.log(item_date)
+            // console.log(item_date)
             if(item_date > past) {  // if the item was acquired recently enough to be of interest
                 var difference = Math.floor(((new Date()) - item_date) / 86400000)  // difference is the number of days in the past
                 difference = Math.floor(difference/28)
-                console.log(difference)
+                // console.log(difference)
                 data_prep[difference] = data_prep[difference] + item.ppi * item.quantity
             }
-            console.log(data_prep)
+            // console.log(data_prep)
             
         })
     } else if (current_tab == "stock") {
 
     } else if (current_tab == "waste") {
-
+        data_pointer.forEach(function (item) {
+            // console.log(item)
+            // console.log("item name is " + item.date_acquired)
+            if(item.status = "trashed") {
+                var year_acq = item.date_removed.substring(0,4)
+                var month_acq = parseInt(item.date_removed.substring(5,7)) - 1
+                var day_acq = item.date_removed.substring(8,10)
+                var item_date = new Date(year_acq, month_acq, day_acq)
+                // console.log(item_date)
+                if(item_date > past) {  // if the item was acquired recently enough to be of interest
+                    var difference = Math.floor(((new Date()) - item_date) / 86400000)  // difference is the number of days in the past
+                    // console.log(difference);
+                    data_prep[difference] = data_prep[difference] + item.quantity
+                }
+            }
+            console.log(data_prep)
+        })
     } else {
         alert("error! error! D: wahhh")
     }
@@ -214,26 +273,33 @@ function threeMonth_select (e) {
             strokeColor : "rgba(151,187,205,1)",
             pointColor : "rgba(151,187,205,1)",
             pointStrokeColor : "#fff",
-            data : data_prep
+            data : data_prep,
         }
         ]
     }
 
     data_prep.reverse()
-    console.log(data.labels.length)
+    
+    var options = {
+        scaleSteps : 10
+    }
 
     var total_spent = data_prep.reduce(function(a, b) {
+        return a + b;
+    });
+
+    var total_wasted = data_prep.reduce(function(a, b) {
         return a + b;
     });
 
     $("#chart").attr('width', '300px');
     $("#chart").attr('height', '300px');
 
-    ChartObject.Line(data);
+    ChartObject.Line(data, options);
 
     $("#spendingLabel").html("Spent $".concat(total_spent.toFixed(2)));
     $("#stockLabel").html("Had 17 items");
-    $("#wasteLabel").html("Lost $43");
+    $("#wasteLabel").html("Wasted ".concat(total_wasted));
     $("#dropdown_title").html("Past week");
 
 }
