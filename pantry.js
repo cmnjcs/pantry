@@ -379,10 +379,7 @@ if (Meteor.isClient) {
                 var expDate = $('#expDate').val();
                 // lols. it's almost like looking up images.
 
-                var img_src = getDefaultFoodImgSrc();
-                if (availableImgs.indexOf(name) >= 0) {
-                    img_src = "images/" + name + ".jpg";
-                }
+                var img_src = getImageUrl(name);
                 if (Session.get("uploadedImage") !== undefined) {
                     var img = ImageStore.find({_id: Session.get("uploadedImage")}).fetch()[0]
                     img_src = img.url();
