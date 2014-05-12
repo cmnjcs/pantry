@@ -30,13 +30,13 @@ var daysUntil = function(day) {
 var filterAllItems = function() {
 	if (Session.get('oldestFirst') == false) {
 		if (Session.get('itemFilter') != "") {
-			return Items.find({uid: Meteor.userId(), status:'in_stock', name: Session.get('itemFilter')}, {sort: { exp_date: 1}}).fetch();
+			return Items.find({uid: Meteor.userId(), status:'in_stock', name: {$regex: Session.get('itemFilter')}}, {sort: { exp_date: 1}}).fetch();
 		} else {
 			return Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: 1}}).fetch();
 		}
 	} else {
 		if (Session.get('itemFilter') != "") {
-			return Items.find({uid: Meteor.userId(), status:'in_stock', name: Session.get('itemFilter')}, {sort: { exp_date: -1}}).fetch();
+			return Items.find({uid: Meteor.userId(), status:'in_stock', name: {$regex: Session.get('itemFilter')}}, {sort: { exp_date: -1}}).fetch();
 		} else {
 			return Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: -1}}).fetch();
 		}
