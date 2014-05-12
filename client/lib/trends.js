@@ -4,6 +4,15 @@ var current_tab = "spending";
 var interestContext = null;
 var ChartObject = null;
 
+// creates an array of length len populated with value value
+function fillArray(value, len) {
+  if (len == 0) return [];
+  var a = [value];
+  while (a.length * 2 <= len) a = a.concat(a);
+  if (a.length < len) a = a.concat(a.slice(0, len - a.length));
+  return a;
+}
+
 // week select function
 function week_select (e) {
     e.preventDefault()
@@ -33,20 +42,23 @@ function week_select (e) {
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
     var data_pointer = null;
-    var data_prep = new Array(7); // variable that will become the data field in the computed_data structure
+    var data_prep = fillArray(0, 7); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
-        data_pointer = Items.find({})
+        data_pointer = Items.find()
         data_pointer.forEach(function (item) {
             console.log(item)
-            //console.log("item name is " + item.date_acquired)
+            console.log("item name is " + item.date_acquired)
             var year_acq = item.date_acquired.substring(0,4)
             var month_acq = parseInt(item.date_acquired.substring(5,7)) - 1
             var day_acq = item.date_acquired.substring(8,10)
             var item_date = new Date(year_acq, month_acq, day_acq)
             console.log(item_date)
-            if(item_date < past) {
-
+            if(item_date > past) {  // if the item was acquired recently enough to be of interest
+                var difference = Math.floor(((new Date()) - item_date) / 86400000)  // difference is the number of days in the past
+                console.log(difference);
+                data_prep[difference] = data_prep[difference] + item.ppi * item.quantity
             }
+            console.log(data_prep)
             
         })
     } else if (current_tab == "stock") {
@@ -65,17 +77,21 @@ function week_select (e) {
             strokeColor : "rgba(151,187,205,1)",
             pointColor : "rgba(151,187,205,1)",
             pointStrokeColor : "#fff",
-            data : computed_data
+            data : data_prep
         }
         ]
     }
+
+    var total_spent = data_prep.reduce(function(a, b) {
+        return a + b;
+    });
 
     $("#chart").attr('width', '300px');
     $("#chart").attr('height', '300px');
 
     ChartObject.Line(data);
 
-    $("#spendingLabel").html("Spent $43");
+    $("#spendingLabel").html("Spent $".concat(total_spent.toFixed(2)));
     $("#stockLabel").html("Had 17 items");
     $("#wasteLabel").html("Lost $43");
     $("#dropdown_title").html("Past week");
