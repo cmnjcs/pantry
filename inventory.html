@@ -3,7 +3,9 @@
     <h1>Inventory</h1>
     {{>modal}}
     {{>alert}}
-    <center><button type="button" class="btn btn-default toggleSort">Oldest First</button> <button type="button" class="btn btn-default toggleExpand">Collapse all</button></center>
+    <center>
+    Search: <input type="text" id="itemName"> <br><br>
+    <button type="button" class="btn btn-default toggleSort">Oldest First</button> <button type="button" class="btn btn-default toggleExpand">Collapse all</button></center>
     {{#each itemNames}}
         {{>itemHeader}}
         <div class="item{{this}} toggable">

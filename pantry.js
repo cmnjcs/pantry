@@ -27,6 +27,22 @@ var daysUntil = function(day) {
 	return diffDays + 1; // off by one?
 }
 
+var filterAllItems = function() {
+	if (Session.get('oldestFirst') == false) {
+		if (Session.get('itemFilter') != "") {
+			return Items.find({uid: Meteor.userId(), status:'in_stock', name: Session.get('itemFilter')}, {sort: { exp_date: 1}}).fetch();
+		} else {
+			return Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: 1}}).fetch();
+		}
+	} else {
+		if (Session.get('itemFilter') != "") {
+			return Items.find({uid: Meteor.userId(), status:'in_stock', name: Session.get('itemFilter')}, {sort: { exp_date: -1}}).fetch();
+		} else {
+			return Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: -1}}).fetch();
+		}
+	}
+}
+
 function getDefaultFoodImgSrc() {
     return 'images/default_image.jpeg';
 }
@@ -47,6 +63,7 @@ if (Meteor.isClient) {
 		Session.set('alertItemName', "");
 		Session.set('alertAction', "");
 		Session.set('oldestFirst', true);
+		Session.set('itemFilter', "");
 	});
 	
 	/* HOME */
@@ -76,7 +93,6 @@ if (Meteor.isClient) {
 		var y = date.getFullYear();
 		goodDate = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
 		all = Items.find({uid: Meteor.userId(), status:'in_stock', exp_date: { $gt: goodDate }}).fetch();
-		console.log('goodDate', goodDate, all);
 		tot = 0;
 		for (i = 0; i < all.length; i++) {
 			tot += all[i].quantity;
@@ -122,13 +138,9 @@ if (Meteor.isClient) {
     }
 
   /* INVENTORY */
-	// get item names sorted by their expiration (item with earliest expiration is first)
+	// get set of item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
-		if (Session.get('oldestFirst') == false) {
-			inStock = Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: 1}}).fetch(); //array
-		} else {
-			inStock = Items.find({uid: Meteor.userId(), status:'in_stock'}, {sort: { exp_date: -1}}).fetch(); //array
-		}
+		inStock = filterAllItems();
 		var list = [];
 		var itemNames = [];
 		for (i = 0; i < inStock.length; i++) {
@@ -335,6 +347,24 @@ if (Meteor.isClient) {
 				Session.set('oldestFirst', false);
 			}
 			$('.toggleSort').html(text);
+		},
+		'keyup input#itemName': function () {
+			AutoCompletion.autocomplete({
+					element: 'input#itemName',
+					collection: Items,
+					field: 'name',
+					limit: 5,
+					sort: {name:1, status: "in_stock"}
+			});
+			name = $('#itemName').val();
+			var allItems = Items.find({status: "in_stock"},{name: 1, _id:0});
+			itemNames = [];
+			allItems.forEach(function(item){itemNames.push(item.name);});
+			if (itemNames.indexOf(name) >= 0) {
+				Session.set("itemFilter", name);
+			} else if (name == "") {
+				Session.set("itemFilter", "");
+			}
 		}
 	})
 
