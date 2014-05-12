@@ -48,6 +48,7 @@ function getDefaultFoodImgSrc() {
 }
 
 function getImageUrl(name) {
+    //TODO: Fix to display image if name changed of an item with an image in folder
     var imgs = Images.find({uid: Meteor.userId(), name: name}).fetch();
     if (imgs.length === 0) {
         if (availableImgs.indexOf(name) >= 0) {
@@ -357,14 +358,16 @@ if (Meteor.isClient) {
 					sort: {name:1, status: "in_stock"}
 			});
 			name = $('#itemName').val();
-			var allItems = Items.find({status: "in_stock"},{name: 1, _id:0});
+			var allItems = Items.find({uid: Meteor.userId(), status: "in_stock"},{name: 1, _id:0});
 			itemNames = [];
 			allItems.forEach(function(item){itemNames.push(item.name);});
-			if (itemNames.indexOf(name) >= 0) {
-				Session.set("itemFilter", name);
-			} else if (name == "") {
-				Session.set("itemFilter", "");
-			}
+			Session.set("itemFilter", name);
+		},
+		'blur .headerName': function(event) {
+			newName = $.trim($(event.currentTarget).html());
+			oldName = String(this);
+			itemsToChange = Items.find({status: "in_stock", name:oldName});
+			itemsToChange.forEach(function(item){Items.update(item._id, {$set: {name: newName}});});
 		}
 	})
 
