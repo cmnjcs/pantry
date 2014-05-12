@@ -239,29 +239,33 @@ if (Meteor.isClient) {
 			//$('alert').slideToggle('slow');
 		}, 3000);
 	};
-	
+
+    function decrementItem(item) {
+        Items.update(item._id, {$inc: {quantity: -1}});
+
+        // create a new item and mark as deleted
+        Items.insert({
+            uid: Meteor.userId(),
+            name: item.name,
+            date_acquired: item.date_acquired,
+            exp_date: item.exp_date,
+            quantity: 1,
+            ppi: item.ppi,
+            status: 'deleted',
+            date_removed: new Date(),
+            img_src: item.img_src
+        });
+        if (item.quantity <= 1) {
+            Items.update(item._id, {$set: {status: 'deleted'}});
+        }
+    }
+
 	Template.inventory.events({
 		'click .plus': function() {
 			Items.update(this._id, {$inc: {quantity: 1}});
 		},
 		'click .minus': function() {
-			Items.update(this._id, {$inc: {quantity: -1}});
-
-			// create a new item and mark as deleted
-            Items.insert({
-                uid: Meteor.userId(),
-                name: this.name,
-                date_acquired: this.date_acquired,
-                exp_date: this.exp_date,
-                quantity: 1,
-                ppi: this.ppi,
-                status: 'deleted',
-                date_removed: new Date(),
-                img_src: this.img_src
-            });
-			if (this.quantity <= 1) {
-				Items.update(this._id, {$set: {status: 'deleted'}});
-			}
+			decrementItem(this);
 			Template.alert.showAlert(this.name, "consumed");
 		},
 		'change .expDate': function() {
@@ -424,10 +428,14 @@ if (Meteor.isClient) {
                     status: 'in_stock',
                     img_src: img_src
                 };
-                Items.insert(item);
-                var ra = Session.get("recentAdds");
-                ra.push(item);
-                Session.set("recentAdds", ra);
+                Items.insert(item, function (err, docsInserted) {
+                    if (!err) {
+                        var ra = Session.get("recentAdds");
+                        item._id = docsInserted;
+                        ra.push(item);
+                        Session.set("recentAdds", ra);
+                    }
+                });
 
                 // reset inputs
                 $('#itemName').val("");
@@ -466,7 +474,58 @@ if (Meteor.isClient) {
                     }
                 });
             });
-        }
+        },
+
+        'click .minus': function() {
+            var itemIndex = -1;
+            var ra = Session.get("recentAdds")
+            for (var i = 0; i < ra.length; ++i) {
+                if (ra[i]._id === this._id) {
+                    itemIndex = i;
+                    break;
+                }
+            }
+
+            decrementItem(this);
+            ra[itemIndex].quantity -= 1;
+            if (ra[itemIndex].quantity === 0) {
+                ra.splice(itemIndex, 1);
+            }
+            Session.set("recentAdds", ra);
+        },
+
+        'click .plus': function() {
+            var itemIndex = -1;
+            var ra = Session.get("recentAdds")
+            for (var i = 0; i < ra.length; ++i) {
+                if (ra[i]._id === this._id) {
+                    itemIndex = i;
+                    break;
+                }
+            }
+
+            Items.update(this._id, {$inc: {quantity: 1}});
+            ra[itemIndex].quantity += 1;
+            if (ra[itemIndex].quantity === 0) {
+                ra.splice(itemIndex, 1);
+            }
+            Session.set("recentAdds", ra);
+        },
+
+        'click .trash': function(event) {
+            var itemIndex = -1;
+            var ra = Session.get("recentAdds")
+            for (var i = 0; i < ra.length; ++i) {
+                if (ra[i]._id === this._id) {
+                    itemIndex = i;
+                    break;
+                }
+            }
+
+			Items.remove(this._id);
+            ra.splice(itemIndex, 1);
+            Session.set("recentAdds", ra);
+		}
 	})
 	
 	/* NAVBAR */
