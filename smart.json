@@ -2,6 +2,8 @@
   "packages": {
     "bootstrap-3": {},
     "iron-router": {},
-    "autocompletion": {}
+    "autocompletion": {},
+    "moment": {},
+    "collectionFS": {}
   }
 }

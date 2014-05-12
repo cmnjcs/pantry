@@ -8,28 +8,46 @@ var ChartObject = null;
 function week_select (e) {
     e.preventDefault()
     // generate graph data here
-    var computed_data = []
+    var computed_data = null
+    computed_data = {
+        labels : ["6 days","5 days","4 days","3 days","2 days","1 day","today"],
+        datasets : [
+        {
+            fillColor : "rgba(151,187,205,0.5)",
+            strokeColor : "rgba(151,187,205,1)",
+            pointColor : "rgba(151,187,205,1)",
+            pointStrokeColor : "#fff",
+            data : [7,6,5,4,3,2,1]
+        }
+        ]
+    }
     // need to calculate how far back to look
     // get current date and subtract 7 days (604800000 ms)
     var today = new Date();
     var today_ms = Date.parse(today); // get today in ms since sometime in 1970
     var past_ms = today_ms - 604800000;
     var past = new Date(past_ms);
-    past.setHours(0)
+    past.setHours(0)    // set them all to 0 to make comparisons easier
     past.setMinutes(0)
     past.setSeconds(0)
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
     var data_pointer = null;
+    var data_prep = new Array(7); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
         data_pointer = Items.find({})
         data_pointer.forEach(function (item) {
-            console.log("item name is " + item.date_acquired)
+            console.log(item)
+            //console.log("item name is " + item.date_acquired)
             var year_acq = item.date_acquired.substring(0,4)
             var month_acq = parseInt(item.date_acquired.substring(5,7)) - 1
             var day_acq = item.date_acquired.substring(8,10)
             var item_date = new Date(year_acq, month_acq, day_acq)
             console.log(item_date)
+            if(item_date < past) {
+
+            }
+            
         })
     } else if (current_tab == "stock") {
 

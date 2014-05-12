@@ -119,14 +119,9 @@ a:hover {
 	
 	vertical-align: middle;
 }
-/*
-.timeSelectDropdownMenu {
-    margin-left: -10px;
-}
-*/
-.summary td {
-    padding: 5px 30px;
-    text-align: center;
+
+td {
+    padding: 3px;
 }
 
 h1 {

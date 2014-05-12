@@ -10,3 +10,6 @@ jquery
 bootstrap-3
 iron-router
 autocompletion
+moment
+collectionFS
+cfs-filesystem

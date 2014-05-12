@@ -1,5 +1,22 @@
 Items = new Meteor.Collection("items");
+ImageStore = new FS.Collection("imagestore", {
+    stores: [new FS.Store.FileSystem("imagestore", {path: "client/images"})],
+    filter: {
+        allow: {
+            contentTypes: ['image/*']
+        },
+        onInvalid: function (message) {
+            if (Meteor.isClient) {
+                alert(message);
+            } else {
+                console.log(message);
+            }
+        }
+    }
+});
+Images = new Meteor.Collection("images");
 currentItem = [];
+availableImgs = ["apple", "banana", "bread", "cheese", "chicken", "lettuce", "milk", "orange", "peach", "avocado"];
 
 var daysUntil = function(day) {
 	var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
@@ -8,6 +25,21 @@ var daysUntil = function(day) {
 
 	var diffDays = Math.round((exp.getTime() - today.getTime())/oneDay);
 	return diffDays + 1; // off by one?
+}
+
+function getDefaultFoodImgSrc() {
+    return 'images/default_image.jpeg';
+}
+
+function getImageUrl(name) {
+    var imgs = Images.find({uid: this.userId, name: name}).fetch();
+    if (imgs.length === 0) {
+        if (availableImgs.indexOf(name) >= 0) {
+            return "images/" + name + ".jpg";
+        }
+        return getDefaultFoodImgSrc();
+    }
+    return ImageStore.find({_id: imgs[imgs.length-1].fid}).fetch()[0].url();
 }
 
 if (Meteor.isClient) {
@@ -25,7 +57,7 @@ if (Meteor.isClient) {
 		var y = date.getFullYear();
 		today = '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
 		all = Items.find({status:'in_stock', exp_date: { $lt: today }}).fetch();
-		console.log('today', today, all);
+//		console.log('today', today, all);
 		tot = 0;
 		for (i = 0; i < all.length; i++) {
 			tot += all[i].quantity;
@@ -60,6 +92,35 @@ if (Meteor.isClient) {
 		return tot;
 	}
 
+    Template.home.totalSpent = function() {
+        // TODO: limit to a month
+        var all = Items.find().fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].ppi * all[i].quantity;
+		}
+		return tot.toFixed(2);
+    }
+
+    Template.home.numItems = function() {
+        // TODO: limit to a month
+        var all = Items.find().fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+    }
+    Template.home.numWaste = function() {
+        // TODO: limit to a month
+        var all = Items.find({status:'trashed'}).fetch();
+		var tot = 0;
+		for (i = 0; i < all.length; i++) {
+			tot += all[i].quantity;
+		}
+		return tot;
+    }
+
   /* INVENTORY */
 	// get item names sorted by their expiration (item with earliest expiration is first)
   Template.inventory.itemNames = function () {
@@ -79,6 +140,10 @@ if (Meteor.isClient) {
 		
 		return itemNames;
   };
+
+    Template.itemHeader.getImgSrc = function (name) {
+        return getImageUrl(name);
+    }
 	
 	// get in stock items with given name, sorted by expiration date
 	Template.inventory.getItem = function (name) {
@@ -116,7 +181,10 @@ if (Meteor.isClient) {
 	
 	// return quality (for coloring) based on expiration date
 	Template.item.quality = function (exp_date) {
-		diffDays = daysUntil(exp_date);
+		var today = moment();
+		var exp = moment(exp_date);
+
+		var diffDays = exp.diff(today, 'days');
 		if (diffDays < 0) {
 			return "bad";
 		} else if (diffDays < 3) {
@@ -138,15 +206,15 @@ if (Meteor.isClient) {
 			return days + " days";
 		}
 	}
-	
+
 	Template.alert.getAlertItemName = function() {
 		return Session.get("alertItemName");
 	};
-	
+
 	Template.alert.getAlertAction = function() {
 		return Session.get("alertAction");
 	};
-	
+
 	Template.alert.showAlert = function(name, status) {
 		Session.set('alertItemName', name);
 		Session.set('alertAction', status);
@@ -166,6 +234,18 @@ if (Meteor.isClient) {
 		'click .minus': function() {
 			Items.update(this._id, {$inc: {quantity: -1}});
 
+			// create a new item and mark as deleted
+            Items.insert({
+                uid: this.userId,
+                name: this.name,
+                date_acquired: this.date_acquired,
+                exp_date: this.exp_date,
+                quantity: 1,
+                ppi: this.ppi,
+                status: 'deleted',
+                date_removed: new Date(),
+                img_src: this.img_src
+            });
 			if (this.quantity <= 1) {
 				Items.update(this._id, {$set: {status: 'deleted'}});
 			}
@@ -201,7 +281,7 @@ if (Meteor.isClient) {
 			quantity = parseInt($("#quantity").val());
 			if (quantity == currentItem.quantity) {
 				Template.alert.showAlert(currentItem.name, 'trashed');
-				Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
+				Items.update(currentItem._id, {$set: {date_removed: moment().format("YYYY-MM-DD"), status: 'trashed'}});
 			} else {
 				Items.update(currentItem._id, {$inc: {quantity: -quantity}});
 				
@@ -216,14 +296,14 @@ if (Meteor.isClient) {
 					quantity: quantity,
 					ppi: currentItem.ppi,
 					status: 'trashed',
-					date_removed: new Date(),
+					date_removed: moment().format("YYYY-MM-DD"),
 					img_src: currentItem.img_src
 				});				
 			}
 		},
 		'click #trashAll': function(event) {
 			Template.alert.showAlert(currentItem.name, "trashed");
-			Items.update(currentItem._id, {$set: {date_removed: new Date(), status: 'trashed'}});
+			Items.update(currentItem._id, {$set: {date_removed: moment().format("YYYY-MM-DD"), status: 'trashed'}});
 		},
 		'click .close': function(event) {
 			$('.alert').hide();
@@ -269,36 +349,75 @@ if (Meteor.isClient) {
         return !empty;
     }
 
+    Template.add.recentAdds = function () {
+        return Session.get("recentAdds");
+    };
+
+    Template.add.rendered = function () {
+        Session.set("recentAdds", []);
+        $('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
+    }
+
+    Template.add.itemImage = function () {
+        var imgs = Images.find({uid: this.userId, name: $('#itemName').val()}).fetch();
+        if (imgs.length === 0) {
+            return {url: getDefaultFoodImgSrc()}
+        }
+        return ImageStore.find({_id: imgs[imgs.length-1].fid}).fetch()[0];
+    }
+
 	Template.add.events({
-			'click #btnSave': function () {
-				if (validateAddForm()) {
-					var name = $('#itemName').val();
-					var quantity = parseInt($('#txtQuantity').val());
-					var cost = $('#txtCost').val();
-					var expDate = $('#expDate').val();
-					// lols. it's almost like looking up images.
-					availableImgs = ["apple", "banana", "bread", "cheese", "chicken", "lettuce", "milk", "orange", "peach", "avocado"];
-					var img_src = "";
-					if (availableImgs.indexOf(name) >= 0) {
-						img_src = "images/" + name + ".jpg";
-					}
-					item = {
-									uid: this.userId,
-									name: name,
-									date_acquired: new Date(),
-									exp_date: expDate,
-									quantity: quantity,
-									ppi: cost / quantity,
-									status: 'in_stock',
-									img_src: img_src
-								};
-					Items.insert(item);
-                    return true;
-                } else {
-                    alert("Please enter missing information");
-                    return false;
+        'change input#itemName': function () {
+            $("#itemImg").prop("src", getImageUrl($('#itemName').val()));
+        },
+
+        'click #btnSave': function () {
+            if (validateAddForm()) {
+                var name = $('#itemName').val();
+                var quantity = parseInt($('#txtQuantity').val());
+                var cost = $('#txtCost').val();
+                var expDate = $('#expDate').val();
+                // lols. it's almost like looking up images.
+
+                var img_src = getDefaultFoodImgSrc();
+                if (availableImgs.indexOf(name) >= 0) {
+                    img_src = "images/" + name + ".jpg";
                 }
-			},
+                if (Session.get("uploadedImage") !== undefined) {
+                    var img = ImageStore.find({_id: Session.get("uploadedImage")}).fetch()[0]
+                    img_src = img.url();
+                    console.log(img_src);
+                     Images.insert({uid: this.userId, name: name, fid: img._id});
+                }
+                item = {
+                    uid: this.userId,
+                    name: name,
+                    date_acquired: moment().format("YYYY-MM-DD"),
+                    exp_date: expDate,
+                    quantity: quantity,
+                    ppi: cost / quantity,
+                    status: 'in_stock',
+                    img_src: img_src
+                };
+                Items.insert(item);
+                var ra = Session.get("recentAdds");
+                ra.push(item);
+                Session.set("recentAdds", ra);
+
+                // reset inputs
+                $('#itemName').val("");
+                $('#txtQuantity').val("1");
+                $('#txtCost').val("");
+                $('#expDate').val(moment().add('days', 7).format("YYYY-MM-DD"));
+                $('#imgInput').val("");
+                $("#itemImg").prop("src", getDefaultFoodImgSrc());
+                Session.set("uploadedImage", undefined);
+                return false;
+            } else {
+                alert("Please enter missing information");
+                return false;
+            }
+        },
 
         'keyup input#itemName': function () {
             AutoCompletion.autocomplete({
@@ -307,6 +426,18 @@ if (Meteor.isClient) {
                 field: 'name',
                 limit: 5,
                 sort: {name:1}
+            });
+        },
+
+        'change input#imgInput': function(event, template) {
+            FS.Utility.eachFile(event, function(file) {
+                file.owner = this.userId;
+//                file.name('apple.png');
+                ImageStore.insert(file, function (err, fileObj) {
+                    if (!err) {
+                        Session.set("uploadedImage", fileObj._id);
+                    }
+                });
             });
         }
 	})
@@ -344,7 +475,7 @@ if (Meteor.isServer) {
 			Items.insert({
 				uid: this.userId,
 				name: "banana", 
-				exp_date: "2014-05-13", 
+				exp_date: "2014-05-13",
 				quantity: 2, 
 				ppi: .9, 
 				status: "in_stock",
@@ -377,7 +508,7 @@ if (Meteor.isServer) {
 			Items.insert({
 				uid: this.userId,
 				name: "avocado", 
-				exp_date: "2014-05-010",
+				exp_date: "2014-05-01",
 				quantity: 1, 
 				ppi: .9, 
 				status: "in_stock",
