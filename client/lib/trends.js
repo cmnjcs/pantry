@@ -1,6 +1,7 @@
 
 // global variables galore
 var current_tab = "spending";
+var current_range = "week";
 var interestContext = null;
 var ChartObject = null;
 
@@ -13,10 +14,30 @@ function fillArray(value, len) {
   return a;
 }
 
+function graphRange(newRange) {
+    current_range = newRange;
+    graphRange();
+}
+function graphRange() {
+    if (current_range === "week") {
+        week_select();
+    } else if (current_range === "month") {
+        month_select();
+    } else if (current_range === "threeMonth") {
+        threeMonth_select();
+    } else {
+        console.log("invalid range: " + current_range);
+        current_range = "week";
+        week_select();
+    }
+}
 // week select function
 function week_select (e) {
     e.preventDefault()
+}
 
+function week_select() {
+    current_range = "week";
     // need to calculate how far back to look
     // get current date and subtract 7 days (604800000 ms)
     var today = new Date();
@@ -113,7 +134,10 @@ function week_select (e) {
 // month select function
 function month_select (e) {
     e.preventDefault()
+}
 
+function month_select() {
+    current_range = "month";
     // need to calculate how far back to look
     // get current date and subtract 28 days (2419000000 ms)
     var today = new Date();
@@ -209,7 +233,10 @@ function month_select (e) {
 // three month select function
 function threeMonth_select (e) {
     e.preventDefault()
+}
 
+function threeMonth_select() {
+    current_range = "threeMonth";
     // need to calculate how far back to look
     // get current date and subtract 84 days (7258000000 ms)
     var today = new Date();
@@ -322,19 +349,22 @@ Template.trends.rendered = function () {
     // code for handling tab switches
     // needs to call timeframe select method upon switch
     $('#spending').click(function (e) {
-    	e.preventDefault()
-        current_tab = "spending"
-    	$(this).tab('show')
+        e.preventDefault();
+        current_tab = "spending";
+        $(this).tab('show');
+        graphRange();
     })
     $('#stock').click(function (e) {
-    	e.preventDefault()
-        current_tab = "stock"
-    	$(this).tab('show')
+        e.preventDefault();
+        current_tab = "stock";
+        $(this).tab('show');
+        graphRange();
     })
     $('#waste').click(function (e) {
-    	e.preventDefault()
-        current_tab = "waste"
-    	$(this).tab('show')
+        e.preventDefault();
+        current_tab = "waste";
+        $(this).tab('show');
+        graphRange();
     })
     $('#weekSelect').click(week_select)
     $('#monthSelect').click(month_select)
@@ -388,27 +418,5 @@ Template.trends.rendered = function () {
     */
     //ChartObject.Line(data);
 
-    $("#spendingLabel").html("Spent $43")
-    $("#stockLabel").html("Had 17 items")
-    $("#wasteLabel").html("Lost $43")
-    $("#dropdown_title").html("Past week");
-
-
-    var data = {
-        labels : ["6 days","5 days","4 days","3 days","2 days","1 day","today"],
-        datasets : [
-        {
-            fillColor : "rgba(151,187,205,0.5)",
-            strokeColor : "rgba(151,187,205,1)",
-            pointColor : "rgba(151,187,205,1)",
-            pointStrokeColor : "#fff",
-            data : [7,6,5,4,3,2,1]
-        }
-        ]
-    }
-
-    $("#chart").attr('width', '300px');
-    $("#chart").attr('height', '300px');
-
-    ChartObject.Line(data);
+    week_select();
 };
