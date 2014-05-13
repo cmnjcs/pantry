@@ -28,7 +28,7 @@ function week_select (e) {
     past.setSeconds(0)
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
-    var data_pointer = Items.find({uid : Meteor.userId});
+    var data_pointer = Items.find({uid : Meteor.userId()});
     var data_prep = fillArray(0, 7); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
         data_pointer.forEach(function (item) {
@@ -125,7 +125,7 @@ function month_select (e) {
     past.setSeconds(0)
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
-    var data_pointer = Items.find({uid : Meteor.userId});
+    var data_pointer = Items.find({uid : Meteor.userId()});
     var data_prep = fillArray(0, 29); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
         data_pointer.forEach(function (item) {
@@ -221,7 +221,7 @@ function threeMonth_select (e) {
     past.setSeconds(0)
     past.setMilliseconds(0)
     // based on currently selected tab, selector is going to vary
-    var data_pointer = Items.find({uid : Meteor.userId});
+    var data_pointer = Items.find({uid : Meteor.userId()});
     var data_prep = fillArray(0, 3); // variable that will become the data field in the computed_data structure
     if(current_tab == "spending") {
         data_pointer.forEach(function (item) {
