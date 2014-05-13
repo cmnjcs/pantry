@@ -550,6 +550,16 @@ if (Meteor.isClient) {
             newName = $.trim($(event.currentTarget).html());
             oldName = String(this.name);
             Items.update(this._id, {$set: {name: newName}});
+        },
+
+        'click #btnIncrement': function () {
+            var quantity = parseInt($("#txtQuantity").val());
+            $("#txtQuantity").val(quantity+1);
+        },
+
+        'click #btnDecrement': function () {
+            var quantity = parseInt($("#txtQuantity").val());
+            $("#txtQuantity").val(quantity-1);
         }
 	})
 	
