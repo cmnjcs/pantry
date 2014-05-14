@@ -74,7 +74,7 @@ function week_select() {
         data_pointer.forEach(function (item) {
             // console.log(item)
             // console.log("item name is " + item.date_acquired)
-            if(item.status = "trashed") {
+            if(item.status === "trashed") {
                 var year_acq = item.date_removed.substring(0,4)
                 var month_acq = parseInt(item.date_removed.substring(5,7)) - 1
                 var day_acq = item.date_removed.substring(8,10)
@@ -173,7 +173,7 @@ function month_select() {
         data_pointer.forEach(function (item) {
             // console.log(item)
             // console.log("item name is " + item.date_acquired)
-            if(item.status = "trashed") {
+            if(item.status === "trashed") {
                 var year_acq = item.date_removed.substring(0,4)
                 var month_acq = parseInt(item.date_removed.substring(5,7)) - 1
                 var day_acq = item.date_removed.substring(8,10)
@@ -274,7 +274,7 @@ function threeMonth_select() {
         data_pointer.forEach(function (item) {
             // console.log(item)
             // console.log("item name is " + item.date_acquired)
-            if(item.status = "trashed") {
+            if(item.status === "trashed") {
                 var year_acq = item.date_removed.substring(0,4)
                 var month_acq = parseInt(item.date_removed.substring(5,7)) - 1
                 var day_acq = item.date_removed.substring(8,10)
